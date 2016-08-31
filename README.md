@@ -7,7 +7,13 @@ OS images to be used on Packet.net baremetal servers.
   - Converting Docker images for use on physical baremetal servers
   - Building images from Packer.io (coming soon!)
 
+### Dependencies
+There is only a small list of deps required to run image builds, but we recommend a dedicated
+machine or VM for this purpose simply to keep things isolated.
 
+ - Docker 1.1.11 and above (older version may work)
+ - JQ (will be installed automatically)
+ - A linux docker host on top of CentOS7 / Ubuntu 16
 
 ### Installation
 **Using git:**
