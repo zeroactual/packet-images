@@ -7,6 +7,9 @@ OS images to be used on Packet.net baremetal servers.
   - Converting Docker images for use on physical baremetal servers
   - Building images from Packer.io (coming soon!)
 
+TLDR:  Build docker image, save docker image to archive and convert the archive to a rootfs
+image. The image can be used on a baremetal physical server with or without docker.
+
 ### Dependencies
 There is only a small list of deps required to run image builds, but we recommend a dedicated
 machine or VM for this purpose simply to keep things isolated.
@@ -32,6 +35,8 @@ machine or VM for this purpose simply to keep things isolated.
     chmod u+x /usr/bin/packet-*
     
 ### Example image build
+Here we are walking through an example docker image build, docker image save and conversion. It really is that easy!
+
     [root@buildbox ubuntu1604]# docker build -t ubuntu1604 .
     ...snip...
     Removing intermediate container 31c25fadd64f
