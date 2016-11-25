@@ -6,6 +6,19 @@ LABEL Description="Packet's Ubuntu 16.04 OS base image" Vendor="Packet.net" Vers
 # Setup the environment
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Temporarily set up ports repo
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial main restricted" >> /etc/apt/sources.list
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-updates main restricted" >> /etc/apt/sources.list
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial universe" >> /etc/apt/sources.list
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-updates universe" >> /etc/apt/sources.list
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial multiverse" >> /etc/apt/sources.list
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-updates multiverse" >> /etc/apt/sources.list
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-backports main restricted universe multiverse" >> /etc/apt/sources.list
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-security main restricted" >> /etc/apt/sources.list
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-security universe" >> /etc/apt/sources.list
+RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-security multiverse" >> /etc/apt/sources.list
+
+
 # Install packages
 RUN apt-get -q update && \
     apt-get -y -qq upgrade && \
@@ -17,12 +30,14 @@ RUN apt-get -q update && \
 	cron \
 	curl \
 	dbus \
+	dialog \
 	file \
 	iptables \
 	iputils-ping \
 	less \
 	lsb-release \
 	lsof \
+	jq \
 	make \
 	man-db \
 	mdadm \
@@ -54,6 +69,8 @@ RUN apt-get -q update && \
 	ifenslave \
 	&& apt-get clean
 
+# Reset apt.sources
+RUN echo "" > /etc/apt/sources.list
 
 # Configure locales
 RUN locale-gen en_US.UTF-8 && \
