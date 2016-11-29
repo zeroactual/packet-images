@@ -70,7 +70,8 @@ RUN apt-get -q update && \
 		uuid-runtime \
 		vim \
 		wget \
-		;
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
 # Assign default target
 RUN systemctl set-default multi-user

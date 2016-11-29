@@ -68,7 +68,8 @@ RUN apt-get -q update && \
 		uuid-runtime \
 		vim \
 		wget \
-	&& apt-get clean
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
 
 # Configure locales
