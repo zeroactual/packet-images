@@ -23,50 +23,50 @@ RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-security multiverse" >
 RUN apt-get -q update && \
     apt-get -y -qq upgrade && \
     apt-get install -y -qq \
-	bash \
-	bash-completion \
-	bc \
-	ca-certificates \
-	cloud-init \
-	cron \
-	curl \
-	dbus \
-	dialog \
-	file \
-	ifenslave \
-	iptables \
-	iputils-ping \
-	jq \
-	less \
-	lsb-release \
-	lsof \
-	make \
-	man-db \
-	mdadm \
-	multipath-tools \
-	nano \
-	net-tools \
-	netcat \
-	nmap \
-	ntp \
-	ntpdate \
-	open-iscsi \
-	python-apt \
-	python-yaml \
-	rsync \
-	rsyslog \
-	screen \
-	software-properties-common \
-	ssh \
-	sudo \
-	sysstat \
-	tar \
-	tcpdump \
-	tmux \
-	unattended-upgrades \
-	uuid-runtime \
-	vim \
-	wget \
+		bash \
+		bash-completion \
+		bc \
+		ca-certificates \
+		cloud-init \
+		cron \
+		curl \
+		dbus \
+		dialog \
+		file \
+		ifenslave \
+		iptables \
+		iputils-ping \
+		jq \
+		less \
+		lsb-release \
+		lsof \
+		make \
+		man-db \
+		mdadm \
+		multipath-tools \
+		nano \
+		net-tools \
+		netcat \
+		nmap \
+		ntp \
+		ntpdate \
+		open-iscsi \
+		python-apt \
+		python-yaml \
+		rsync \
+		rsyslog \
+		screen \
+		software-properties-common \
+		ssh \
+		sudo \
+		sysstat \
+		tar \
+		tcpdump \
+		tmux \
+		unattended-upgrades \
+		uuid-runtime \
+		vim \
+		wget \
 	&& apt-get clean
 
 # Reset apt.sources
@@ -74,5 +74,6 @@ RUN echo "" > /etc/apt/sources.list
 
 # Configure locales
 RUN locale-gen en_US.UTF-8 && \
-    dpkg-reconfigure locales
+	dpkg-reconfigure locales
 
+# vim: set tabstop=4 shiftwidth=4:
