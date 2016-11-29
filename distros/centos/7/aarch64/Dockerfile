@@ -12,39 +12,39 @@ RUN yum install ${YUM_OPTS} -y \
       bash-completion \
       ca-certificates \
       curl \
+      device-mapper-multipath \
+      e2fsprogs \
+      iscsi-initiator-utils \
+      libselinux-python \
       make \
       mdadm \
+      mtr \
+      net-tools \
+      NetworkManager-team \
+      NetworkManager-tui \
+      nmap-ncat \
       ntp \
       ntpdate \
+      openssh-clients \
+      openssh-server \
+      policycoreutils-python \
+      python-configobj \
+      python-jsonpointer \
+      python-requests \
+      PyYAML \
+      redhat-lsb-core \
       rsync \
       screen \
       socat \
       sudo \
       sysstat \
-      openssh-server \
-      openssh-clients \
       tar \
       tcpdump \
+      teamd \
       tmux \
+      traceroute \
       vim \
       wget \
-      redhat-lsb-core \
-      net-tools \
-      mtr \
-      traceroute \
-      nmap-ncat \
-      teamd \
-      NetworkManager-team \
-      NetworkManager-tui \
-      iscsi-initiator-utils \
-      device-mapper-multipath \
-      e2fsprogs \
-      libselinux-python \
-      policycoreutils-python \
-      python-configobj \
-      PyYAML \
-      python-requests \
-      python-jsonpointer \
 && yum clean all
 
 RUN wget ftp://195.220.108.108/linux/fedora-secondary/releases/22/Everything/aarch64/os/Packages/p/python-jsonpatch-1.2-5.fc22.noarch.rpm && rpm -ivh python-jsonpatch-1.2-5.fc22.noarch.rpm

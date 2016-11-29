@@ -6,18 +6,27 @@ RUN yum install ${YUM_OPTS} -y \
       bash \
       bash-completion \
       ca-certificates \
+      cloud-init \
       cron \
       curl \
+      device-mapper-multipath \
       ethstatus \
       ioping \
       iotop \
       iperf \
+      iscsi-initiator-utils \
       locate \
       make \
       mdadm \
       mg \
+      mtr \
+      net-tools \
+      NetworkManager-team \
+      NetworkManager-tui \
+      nmap-ncat \
       ntp \
       ntpdate \
+      redhat-lsb-core \
       rsync \
       screen \
       socat \
@@ -27,19 +36,10 @@ RUN yum install ${YUM_OPTS} -y \
       systemd \
       tar \
       tcpdump \
+      teamd \
       tmux \
+      traceroute \
       vim \
       wget \
-      redhat-lsb-core \
-      net-tools \
-      mtr \
-      traceroute \
-      nmap-ncat \
-      teamd \
-      cloud-init \
-      NetworkManager-team \
-      NetworkManager-tui \
-      iscsi-initiator-utils \
-      device-mapper-multipath \
  && yum clean all
 

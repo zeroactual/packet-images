@@ -16,6 +16,7 @@ RUN apt-get -q update && \
 	bc \
 	biosdevname \
 	ca-certificates \
+	cloud-init \
 	cron \
 	curl \
 	dbus \
@@ -24,6 +25,7 @@ RUN apt-get -q update && \
 	file \
 	fio \
 	htop \
+	ifenslave \
 	ioping \
 	iotop \
 	iperf \
@@ -38,12 +40,15 @@ RUN apt-get -q update && \
 	mdadm \
 	mg \
 	mosh \
+	mtr \
+	multipath-tools \
 	nano \
 	net-tools \
 	netcat \
 	nmap \
 	ntp \
 	ntpdate \
+	open-iscsi \
 	python-apt \
 	python-yaml \
 	rsync \
@@ -51,23 +56,18 @@ RUN apt-get -q update && \
 	screen \
 	shunit2 \
 	socat \
+	software-properties-common \
 	ssh \
 	sudo \
 	sysstat \
 	tar \
 	tcpdump \
 	tmux \
+	traceroute \
+	unattended-upgrades \
 	uuid-runtime \
 	vim \
 	wget \
-	software-properties-common \
-	unattended-upgrades \
-	open-iscsi \
-	multipath-tools \
-	mtr \
-	traceroute \
-	cloud-init \
-	ifenslave \
 	&& apt-get clean
 
 

@@ -11,10 +11,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -q update && \
     apt-get -y -qq upgrade && \
     apt-get install -y -qq \
+	apt-transport-https \
 	bash \
 	bash-completion \
 	bc \
 	ca-certificates \
+	cloud-init \
 	cron \
 	curl \
 	dbus \
@@ -25,27 +27,31 @@ RUN apt-get -q update && \
 	fio \
 	haveged \
 	htop \
+	ifenslave \
 	ioping \
 	iotop \
 	iperf \
 	iptables \
 	iputils-ping \
 	less \
+	locales \
 	locate \
 	lsb-release \
 	lsof \
-	locales \
 	make \
 	man-db \
 	mdadm \
 	mg \
 	mosh \
+	mtr \
+	multipath-tools \
 	nano \
 	net-tools \
 	netcat \
 	nmap \
 	ntp \
 	ntpdate \
+	open-iscsi \
 	python-apt \
 	python-yaml \
 	rsync \
@@ -53,25 +59,20 @@ RUN apt-get -q update && \
 	screen \
 	shunit2 \
 	socat \
+	software-properties-common \
 	ssh \
 	sudo \
 	sysstat \
+	systemd-sysv \
 	tar \
 	tcpdump \
 	tmux \
+	traceroute \
+	unattended-upgrades \
 	uuid-runtime \
 	vim \
 	wget \
-	software-properties-common \
-	unattended-upgrades \
-	open-iscsi \
-	multipath-tools \
-	cloud-init \
-	mtr \
-	traceroute \
-	ifenslave \
-	apt-transport-https \
-	systemd-sysv
+	;
 
 # Assign default target
 RUN systemctl set-default multi-user

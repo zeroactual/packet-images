@@ -27,46 +27,46 @@ RUN apt-get -q update && \
 	bash-completion \
 	bc \
 	ca-certificates \
+	cloud-init \
 	cron \
 	curl \
 	dbus \
 	dialog \
 	file \
+	ifenslave \
 	iptables \
 	iputils-ping \
+	jq \
 	less \
 	lsb-release \
 	lsof \
-	jq \
 	make \
 	man-db \
 	mdadm \
+	multipath-tools \
 	nano \
 	net-tools \
 	netcat \
 	nmap \
 	ntp \
 	ntpdate \
+	open-iscsi \
 	python-apt \
 	python-yaml \
 	rsync \
 	rsyslog \
 	screen \
+	software-properties-common \
 	ssh \
 	sudo \
 	sysstat \
 	tar \
 	tcpdump \
 	tmux \
+	unattended-upgrades \
 	uuid-runtime \
 	vim \
 	wget \
-	software-properties-common \
-	unattended-upgrades \
-	open-iscsi \
-	multipath-tools \
-	cloud-init \
-	ifenslave \
 	&& apt-get clean
 
 # Reset apt.sources
