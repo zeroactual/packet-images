@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM quay.io/packet/images:ubuntu_14_04-base0
 MAINTAINER David Laube <dlaube@packet.net>
 LABEL Description="Packet's Ubuntu 14.04 OS base image" Vendor="Packet.net" Version="1.0"
 
