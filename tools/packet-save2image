@@ -1,32 +1,31 @@
 #!/bin/bash
 ##
 # Usage:   ./save2image docker-save-file.tar
-# Description: 	Extracts a multi-layer "docker save" TAR archive, finds the
+# Description:	Extracts a multi-layer "docker save" TAR archive, finds the
 #		largest archives and then consolidates them within a single
 #		.tar.gz rootfs archive.
 ##
 
-usage(){
-  echo "usage: $0 [-vh] [docker-save-file.tar]"
-  echo "	-v		make verbose"
-  echo "	-h		display help"
-  echo "	docker-save-file	specify the docker save file to convert, eg: docker-save-file.tar"
-  exit 1
+usage() {
+	echo "usage: $0 [-vh] [docker-save-file.tar]"
+	echo "	-v		make verbose"
+	echo "	-h		display help"
+	echo "	docker-save-file	specify the docker save file to convert, eg: docker-save-file.tar"
+	exit 1
 }
 
 # Get cli options
 _V=0
-while getopts "vhV:" OPTION
-do
-  case $OPTION in
-    h) usage ;;
-    v) _V=1 ;;
-    *) exit 1 ;;
-  esac
+while getopts "vhV:" OPTION; do
+	case $OPTION in
+		h) usage ;;
+		v) _V=1 ;;
+		*) exit 1 ;;
+	esac
 done
 
 shift $(($OPTIND - 1))
-if [ $1 ] ; then
+if [ $1 ]; then
 	dockersave=$1
 fi
 
@@ -38,19 +37,18 @@ else
 fi
 
 if [[ -z "${dockersave}" ]]; then
-    echo "$0: No docker save file provided but is required." >&2
-    exit 1
+	echo "$0: No docker save file provided but is required." >&2
+	exit 1
 fi
 
 # Depends on jq
-if [ ! `which jq` ]; then
+if [ ! $(which jq) ]; then
 	echo "JQ was not found. Installing..."
 	wget --quiet -O /bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && chmod +x /bin/jq
 fi
 
 # Check for deps
-for dep in tar jq mktemp;
-do
+for dep in tar jq mktemp; do
 	if type $dep &>/dev/null; then
 		break
 	else
@@ -60,20 +58,20 @@ do
 done
 
 dockersave=$1
-tmp=`mktemp -d -t pkimage-XXXXXXX`
+tmp=$(mktemp -d -t pkimage-XXXXXXX)
 packdir=$tmp/consolidated
 [ $_V -eq 1 ] && echo "Temp directory is: $tmp"
 
 mkdir -p $packdir
 tar --warning=none -xf $dockersave -C $tmp
-for layer in `cat $tmp/manifest.json | sed 's/^.\(.*\).$/\1/' | jq -r '.Layers[]'`; do
+for layer in $(cat $tmp/manifest.json | sed 's/^.\(.*\).$/\1/' | jq -r '.Layers[]'); do
 	[ $_V -eq 1 ] && echo "Extracting sorted layer $layer"
 	tar -xf $tmp/$layer -C $tmp/consolidated
 done
 
 echo "Creating consolidated image archive..."
 cd $packdir
-if tar -czf ../../$1-image.gz --totals --checkpoint=.1000 ./ ; then
+if tar -czf ../../$1-image.gz --totals --checkpoint=.1000 ./; then
 	echo "Image archive $1-image.gz created successfully"
 else
 	echo "ERROR: Image archive creation failed"
