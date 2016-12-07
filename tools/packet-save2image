@@ -7,22 +7,28 @@
 ##
 
 usage() {
-	echo "usage: $0 [-vh] [docker-save-file.tar]"
-	echo "	-v		make verbose"
-	echo "	-h		display help"
-	echo "	docker-save-file	specify the docker save file to convert, eg: docker-save-file.tar"
-	exit 1
+	cat >&2 <<EOF
+usage: $0 [-vh] docker-saved-file.tar
+	-v                make verbose
+	-h		  display help
+	docker-save-file  specify the docker save file to convert, eg: docker-save-file.tar
+EOF
 }
+
+say() {
+	echo "$@" >&2
+}
+
+msg() { :; }
 
 set -e
 
 # Get cli options
-_V=0
-while getopts "vhV:" OPTION; do
+while getopts "vh:" OPTION; do
 	case $OPTION in
-		h) usage ;;
-		v) _V=1 ;;
-		*) exit 1 ;;
+		h) usage && exit 0 ;;
+		v) msg() { say "$@"; } ;;
+		*) usage && exit 1 ;;
 	esac
 done
 
@@ -32,20 +38,20 @@ if [[ -n $1 ]]; then
 fi
 
 if [[ -f $dockersave ]]; then
-	[[ $_V -eq 1 ]] && echo "Docker save file exists... good"
+	msg "Docker save file exists... good"
 else
-	echo "Docker save file not valid or is missing"
-	exit
+	say "Docker save file not valid or is missing"
+	exit 1
 fi
 
 if [[ -z "${dockersave}" ]]; then
-	echo "$0: No docker save file provided but is required." >&2
+	say "$0: No docker save file provided but is required." >&2
 	exit 1
 fi
 
 # Depends on jq
 if [[ ! $(which jq) ]]; then
-	echo "JQ was not found. Installing..."
+	say "JQ was not found. Installing..."
 	wget --quiet -O /bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && chmod +x /bin/jq
 fi
 
@@ -54,7 +60,7 @@ for dep in tar jq mktemp; do
 	if type $dep &>/dev/null; then
 		break
 	else
-		echo "Error: $dep not found. Please install it first."
+		say "Error: $dep not found. Please install it first."
 		exit 1
 	fi
 done
@@ -66,19 +72,19 @@ tmp=$(mktemp -d -t pkimage-XXXXXXX)
 trap "rm -rf $tmp" EXIT
 
 packdir=$tmp/consolidated
-[[ $_V -eq 1 ]] && echo "Temp directory is: $tmp"
+msg "Temp directory is: $tmp"
 
 mkdir -p "$packdir"
 tar --warning=none -xf "$dockersave" -C "$tmp"
 for layer in $(jq -r '.[0].Layers[]' "$tmp/manifest.json"); do
-	[[ $_V -eq 1 ]] && echo "Extracting sorted layer $layer"
+	msg "Extracting sorted layer $layer"
 	tar -xf "$tmp/$layer" -C "$tmp/consolidated"
 done
 
-echo "Creating consolidated image archive..."
+say "Creating consolidated image archive..."
 cd "$packdir"
 if tar -czf "../../$1-image.gz" --totals --checkpoint=.1000 ./; then
-	echo "Image archive $1-image.gz created successfully"
+	say "Image archive $1-image.gz created successfully"
 else
-	echo "ERROR: Image archive creation failed"
+	say "ERROR: Image archive creation failed"
 fi
