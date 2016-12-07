@@ -49,17 +49,9 @@ if [[ -z "${dockersave}" ]]; then
 	exit 1
 fi
 
-# Depends on jq
-if [[ ! $(which jq) ]]; then
-	say "JQ was not found. Installing..."
-	wget --quiet -O /bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && chmod +x /bin/jq
-fi
-
 # Check for deps
 for dep in tar jq mktemp; do
-	if type $dep &>/dev/null; then
-		break
-	else
+	if ! type $dep &>/dev/null; then
 		say "Error: $dep not found. Please install it first."
 		exit 1
 	fi
