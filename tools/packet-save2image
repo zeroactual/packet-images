@@ -14,6 +14,8 @@ usage() {
 	exit 1
 }
 
+set -e
+
 # Get cli options
 _V=0
 while getopts "vhV:" OPTION; do
@@ -24,7 +26,7 @@ while getopts "vhV:" OPTION; do
 	esac
 done
 
-shift $(($OPTIND - 1))
+shift $((OPTIND - 1))
 if [[ -n $1 ]]; then
 	dockersave=$1
 fi
@@ -58,24 +60,25 @@ for dep in tar jq mktemp; do
 done
 
 dockersave=$1
+
 tmp=$(mktemp -d -t pkimage-XXXXXXX)
+# shellcheck disable=SC2064
+trap "rm -rf $tmp" EXIT
+
 packdir=$tmp/consolidated
 [[ $_V -eq 1 ]] && echo "Temp directory is: $tmp"
 
-mkdir -p $packdir
-tar --warning=none -xf $dockersave -C $tmp
-for layer in $(cat $tmp/manifest.json | sed 's/^.\(.*\).$/\1/' | jq -r '.Layers[]'); do
+mkdir -p "$packdir"
+tar --warning=none -xf "$dockersave" -C "$tmp"
+for layer in $(jq -r '.[0].Layers[]' "$tmp/manifest.json"); do
 	[[ $_V -eq 1 ]] && echo "Extracting sorted layer $layer"
-	tar -xf $tmp/$layer -C $tmp/consolidated
+	tar -xf "$tmp/$layer" -C "$tmp/consolidated"
 done
 
 echo "Creating consolidated image archive..."
-cd $packdir
-if tar -czf ../../$1-image.gz --totals --checkpoint=.1000 ./; then
+cd "$packdir"
+if tar -czf "../../$1-image.gz" --totals --checkpoint=.1000 ./; then
 	echo "Image archive $1-image.gz created successfully"
 else
 	echo "ERROR: Image archive creation failed"
 fi
-
-#clean up
-rm -rf $tmp
