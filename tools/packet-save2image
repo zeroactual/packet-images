@@ -19,6 +19,13 @@ say() {
 	echo "$@" >&2
 }
 
+realpath() {
+	for arg in "$@"; do
+		cd "$(dirname "$arg")"
+		echo "$PWD/$(basename "$arg")"
+	done
+}
+
 msg() { :; }
 
 set -e
@@ -47,6 +54,9 @@ else
 	exit 1
 fi
 
+dockersave=$(realpath "$dockersave")
+outfile=$PWD/$(basename "$dockersave")-image.gz
+
 # Check for deps
 for dep in tar jq mktemp; do
 	if ! type $dep &>/dev/null; then
@@ -63,15 +73,16 @@ msg "Temp directory is: $tmp"
 packdir=$tmp/consolidated
 mkdir "$packdir"
 
-tar --warning=none -xf "$dockersave" -C "$tmp"
-for layer in $(jq -r '.[0].Layers[]' "$tmp/manifest.json"); do
+cd "$tmp"
+tar --warning=none -xf "$dockersave"
+for layer in $(jq -r '.[0].Layers[]' manifest.json); do
 	msg "Extracting sorted layer $layer"
-	tar -xf "$tmp/$layer" -C "$packdir"
+	tar -xf "$layer" -C "$packdir"
 done
 
-say "Creating consolidated image archive..."
 cd "$packdir"
-if tar -czf "../../$dockersave-image.gz" --totals --checkpoint=.1000 ./; then
+say "Creating consolidated image archive..."
+if tar -czf "$outfile" --totals --checkpoint=.1000 ./; then
 	say "Image archive $dockersave-image.gz created successfully"
 else
 	say "ERROR: Image archive creation failed"
