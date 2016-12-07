@@ -74,10 +74,13 @@ packdir=$tmp/consolidated
 mkdir "$packdir"
 
 cd "$tmp"
-tar --warning=none -xf "$dockersave"
+tar -xf "$dockersave"
 for layer in $(jq -r '.[0].Layers[]' manifest.json); do
 	msg "Extracting sorted layer $layer"
 	tar -xf "$layer" -C "$packdir"
+	find "$packdir" -name .wh.\* | while read -r path; do
+		rm -rf "$path" "${path#.wh.}"
+	done
 done
 
 cd "$packdir"
