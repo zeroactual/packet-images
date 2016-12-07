@@ -25,12 +25,12 @@ while getopts "vhV:" OPTION; do
 done
 
 shift $(($OPTIND - 1))
-if [ $1 ]; then
+if [[ -n $1 ]]; then
 	dockersave=$1
 fi
 
-if [ -f $dockersave ]; then
-	[ $_V -eq 1 ] && echo "Docker save file exists... good"
+if [[ -f $dockersave ]]; then
+	[[ $_V -eq 1 ]] && echo "Docker save file exists... good"
 else
 	echo "Docker save file not valid or is missing"
 	exit
@@ -42,7 +42,7 @@ if [[ -z "${dockersave}" ]]; then
 fi
 
 # Depends on jq
-if [ ! $(which jq) ]; then
+if [[ ! $(which jq) ]]; then
 	echo "JQ was not found. Installing..."
 	wget --quiet -O /bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && chmod +x /bin/jq
 fi
@@ -60,12 +60,12 @@ done
 dockersave=$1
 tmp=$(mktemp -d -t pkimage-XXXXXXX)
 packdir=$tmp/consolidated
-[ $_V -eq 1 ] && echo "Temp directory is: $tmp"
+[[ $_V -eq 1 ]] && echo "Temp directory is: $tmp"
 
 mkdir -p $packdir
 tar --warning=none -xf $dockersave -C $tmp
 for layer in $(cat $tmp/manifest.json | sed 's/^.\(.*\).$/\1/' | jq -r '.Layers[]'); do
-	[ $_V -eq 1 ] && echo "Extracting sorted layer $layer"
+	[[ $_V -eq 1 ]] && echo "Extracting sorted layer $layer"
 	tar -xf $tmp/$layer -C $tmp/consolidated
 done
 
