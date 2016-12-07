@@ -33,19 +33,17 @@ while getopts "vh:" OPTION; do
 done
 
 shift $((OPTIND - 1))
-if [[ -n $1 ]]; then
-	dockersave=$1
+
+dockersave=$1
+if [[ -z $dockersave ]]; then
+	say "$0: No docker save file provided but is required."
+	exit 1
 fi
 
 if [[ -f $dockersave ]]; then
 	msg "Docker save file exists... good"
 else
 	say "Docker save file not valid or is missing"
-	exit 1
-fi
-
-if [[ -z "${dockersave}" ]]; then
-	say "$0: No docker save file provided but is required." >&2
 	exit 1
 fi
 
@@ -57,26 +55,24 @@ for dep in tar jq mktemp; do
 	fi
 done
 
-dockersave=$1
-
 tmp=$(mktemp -d -t pkimage-XXXXXXX)
 # shellcheck disable=SC2064
 trap "rm -rf $tmp" EXIT
-
-packdir=$tmp/consolidated
 msg "Temp directory is: $tmp"
 
-mkdir -p "$packdir"
+packdir=$tmp/consolidated
+mkdir "$packdir"
+
 tar --warning=none -xf "$dockersave" -C "$tmp"
 for layer in $(jq -r '.[0].Layers[]' "$tmp/manifest.json"); do
 	msg "Extracting sorted layer $layer"
-	tar -xf "$tmp/$layer" -C "$tmp/consolidated"
+	tar -xf "$tmp/$layer" -C "$packdir"
 done
 
 say "Creating consolidated image archive..."
 cd "$packdir"
-if tar -czf "../../$1-image.gz" --totals --checkpoint=.1000 ./; then
-	say "Image archive $1-image.gz created successfully"
+if tar -czf "../../$dockersave-image.gz" --totals --checkpoint=.1000 ./; then
+	say "Image archive $dockersave-image.gz created successfully"
 else
 	say "ERROR: Image archive creation failed"
 fi
