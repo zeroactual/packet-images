@@ -19,6 +19,7 @@ RUN apt-get -q update && \
 		cron \
 		curl \
 		dbus \
+		dialog \
 		dstat \
 		ethstatus \
 		file \
