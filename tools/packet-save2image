@@ -1,83 +1,92 @@
 #!/bin/bash
 ##
 # Usage:   ./save2image docker-save-file.tar
-# Description: 	Extracts a multi-layer "docker save" TAR archive, finds the
+# Description:	Extracts a multi-layer "docker save" TAR archive, finds the
 #		largest archives and then consolidates them within a single
 #		.tar.gz rootfs archive.
 ##
 
-usage(){
-  echo "usage: $0 [-vh] [docker-save-file.tar]"
-  echo "	-v		make verbose"
-  echo "	-h		display help"
-  echo "	docker-save-file	specify the docker save file to convert, eg: docker-save-file.tar"
-  exit 1
+usage() {
+	cat >&2 <<EOF
+usage: $0 [-vh] docker-saved-file.tar
+	-v                make verbose
+	-h		  display help
+	docker-save-file  specify the docker save file to convert, eg: docker-save-file.tar
+EOF
 }
 
+say() {
+	echo "$@" >&2
+}
+
+realpath() {
+	for arg in "$@"; do
+		cd "$(dirname "$arg")"
+		echo "$PWD/$(basename "$arg")"
+	done
+}
+
+msg() { :; }
+
+set -e
+
 # Get cli options
-_V=0
-while getopts "vhV:" OPTION
-do
-  case $OPTION in
-    h) usage ;;
-    v) _V=1 ;;
-    *) exit 1 ;;
-  esac
+while getopts "vh:" OPTION; do
+	case $OPTION in
+		h) usage && exit 0 ;;
+		v) msg() { say "$@"; } ;;
+		*) usage && exit 1 ;;
+	esac
 done
 
-shift $(($OPTIND - 1))
-if [ $1 ] ; then
-	dockersave=$1
+shift $((OPTIND - 1))
+
+dockersave=$1
+if [[ -z $dockersave ]]; then
+	say "$0: No docker save file provided but is required."
+	exit 1
 fi
 
-if [ -f $dockersave ]; then
-	[ $_V -eq 1 ] && echo "Docker save file exists... good"
+if [[ -f $dockersave ]]; then
+	msg "Docker save file exists... good"
 else
-	echo "Docker save file not valid or is missing"
-	exit
+	say "Docker save file not valid or is missing"
+	exit 1
 fi
 
-if [[ -z "${dockersave}" ]]; then
-    echo "$0: No docker save file provided but is required." >&2
-    exit 1
-fi
-
-# Depends on jq
-if [ ! `which jq` ]; then
-	echo "JQ was not found. Installing..."
-	wget --quiet -O /bin/jq https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 && chmod +x /bin/jq
-fi
+dockersave=$(realpath "$dockersave")
+outfile=$PWD/$(basename "$dockersave")-image.gz
 
 # Check for deps
-for dep in tar jq mktemp;
-do
-	if type $dep &>/dev/null; then
-		break
-	else
-		echo "Error: $dep not found. Please install it first."
+for dep in tar jq mktemp; do
+	if ! type $dep &>/dev/null; then
+		say "Error: $dep not found. Please install it first."
 		exit 1
 	fi
 done
 
-dockersave=$1
-tmp=`mktemp -d -t pkimage-XXXXXXX`
-packdir=$tmp/consolidated
-[ $_V -eq 1 ] && echo "Temp directory is: $tmp"
+tmp=$(mktemp -d -t pkimage-XXXXXXX)
+# shellcheck disable=SC2064
+trap "rm -rf $tmp" EXIT
+msg "Temp directory is: $tmp"
 
-mkdir -p $packdir
-tar --warning=none -xf $dockersave -C $tmp
-for layer in `cat $tmp/manifest.json | sed 's/^.\(.*\).$/\1/' | jq -r '.Layers[]'`; do
-	[ $_V -eq 1 ] && echo "Extracting sorted layer $layer"
-	tar -xf $tmp/$layer -C $tmp/consolidated
+packdir=$tmp/consolidated
+mkdir "$packdir"
+
+cd "$tmp"
+tar -xf "$dockersave"
+for layer in $(jq -r '.[0].Layers[]' manifest.json); do
+	msg "Extracting sorted layer $layer"
+	tar -xf "$layer" -C "$packdir"
+	find "$packdir" -name .wh.\* | while read -r path; do
+		rm -rf "$path" "${path#.wh.}"
+	done
 done
 
-echo "Creating consolidated image archive..."
-cd $packdir
-if tar -czf ../../$1-image.gz --totals --checkpoint=.1000 ./ ; then
-	echo "Image archive $1-image.gz created successfully"
+cd "$packdir"
+say "Creating consolidated image archive..."
+if tar -czf "$outfile" --totals --checkpoint=.1000 ./; then
+	say "Image archive $dockersave-image.gz created successfully"
 else
-	echo "ERROR: Image archive creation failed"
+	say "ERROR: Image archive creation failed"
 fi
-
-#clean up
-rm -rf $tmp
