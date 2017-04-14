@@ -1,8 +1,10 @@
 FROM multiarch/centos:7.2.1511-amd64-clean
 MAINTAINER David Laube <dlaube@packet.net>
-LABEL Description="Packet's CentOS 7 OS base image" Vendor="Packet.net" Version="1.0"
+LABEL Description="Packet's CentOS 7 OS base image" Vendor="Packet.net"
+LABEL Version="2017.04.13.00"
 
-RUN yum install ${YUM_OPTS} -y \
+RUN yum update  ${YUM_OPTS} -y && \
+	yum install ${YUM_OPTS} -y \
 	bash \
 	bash-completion \
 	ca-certificates \
