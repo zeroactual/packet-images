@@ -1,6 +1,11 @@
-FROM ubuntu:16.04
+FROM scratch
 MAINTAINER David Laube <dlaube@packet.net>
-LABEL Description="Packet's Ubuntu 16.04 OS base image" Vendor="Packet.net" Version="1.0"
+ADD xenial-base-amd64.tar.gz /
+
+LABEL name="Ubuntu Canonical Base Image" \
+    vendor="Ubuntu" \
+    license="GPLv2" \
+    build-date="20170508"
 
 
 # Setup the environment
@@ -68,9 +73,15 @@ RUN apt-get -q update && \
 		uuid-runtime \
 		vim \
 		wget \
+		locales \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
+# TESTING - Install kernel deps
+RUN apt-get -q update && \
+	apt-get -y -qq upgrade && \
+	apt-get install -y -qq \
+	crda gettext-base grub-common grub-gfxpayload-lists grub-pc grub-pc-bin grub2-common iw libasprintf0v5 libfuse2 libnl-3-200 libnl-genl-3-200 linux-firmware os-prober thermald wireless-regdb
 
 # Configure locales
 RUN locale-gen en_US.UTF-8 && \
@@ -79,5 +90,8 @@ RUN locale-gen en_US.UTF-8 && \
 # Fix permissions
 RUN chown root:syslog /var/log \
 	&& chmod 755 /etc/default
+
+# Fix cloud-init EC2 warning
+RUN touch /root/.cloud-warnings.skip
 
 # vim: set tabstop=4 shiftwidth=4:

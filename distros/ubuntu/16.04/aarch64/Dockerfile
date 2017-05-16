@@ -1,22 +1,15 @@
-FROM multiarch/ubuntu-debootstrap:arm64-xenial
+FROM scratch
 MAINTAINER David Laube <dlaube@packet.net>
-LABEL Description="Packet's Ubuntu 16.04 OS base image" Vendor="Packet.net" Version="1.0"
+ADD xenial-base-arm64.tar.gz /
+
+LABEL name="Ubuntu Canonical Base Image" \
+    vendor="Ubuntu" \
+    license="GPLv2" \
+    build-date="20170508"
 
 
 # Setup the environment
 ENV DEBIAN_FRONTEND=noninteractive
-
-# Temporarily set up ports repo
-RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial main restricted" >> /etc/apt/sources.list
-RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-updates main restricted" >> /etc/apt/sources.list
-RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial universe" >> /etc/apt/sources.list
-RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-updates universe" >> /etc/apt/sources.list
-RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial multiverse" >> /etc/apt/sources.list
-RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-updates multiverse" >> /etc/apt/sources.list
-RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-backports main restricted universe multiverse" >> /etc/apt/sources.list
-RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-security main restricted" >> /etc/apt/sources.list
-RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-security universe" >> /etc/apt/sources.list
-RUN echo "deb http://ports.ubuntu.com/ubuntu-ports xenial-security multiverse" >> /etc/apt/sources.list
 
 
 # Install packages
@@ -31,18 +24,27 @@ RUN apt-get -q update && \
 		cron \
 		curl \
 		dbus \
-		dialog \
+		dstat \
+		ethstatus \
 		file \
+		fio \
+		htop \
 		ifenslave \
+		ioping \
+		iotop \
+		iperf \
 		iptables \
 		iputils-ping \
-		jq \
 		less \
+		locate \
 		lsb-release \
 		lsof \
 		make \
 		man-db \
 		mdadm \
+		mg \
+		mosh \
+		mtr \
 		multipath-tools \
 		nano \
 		net-tools \
@@ -56,6 +58,8 @@ RUN apt-get -q update && \
 		rsync \
 		rsyslog \
 		screen \
+		shunit2 \
+		socat \
 		software-properties-common \
 		ssh \
 		sudo \
@@ -63,18 +67,30 @@ RUN apt-get -q update && \
 		tar \
 		tcpdump \
 		tmux \
+		traceroute \
 		unattended-upgrades \
 		uuid-runtime \
 		vim \
 		wget \
+		locales \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
-# Reset apt.sources
-RUN echo "" > /etc/apt/sources.list
+# TESTING - Install kernel deps
+RUN apt-get -q update && \
+	apt-get -y -qq upgrade && \
+	apt-get install -y -qq \
+	crda gettext-base iw libasprintf0v5 libfuse2 libnl-3-200 libnl-genl-3-200 linux-firmware os-prober
 
 # Configure locales
 RUN locale-gen en_US.UTF-8 && \
-	dpkg-reconfigure locales
+    dpkg-reconfigure locales
+
+# Fix permissions
+RUN chown root:syslog /var/log \
+	&& chmod 755 /etc/default
+
+# Fix cloud-init EC2 warning
+RUN touch /root/.cloud-warnings.skip
 
 # vim: set tabstop=4 shiftwidth=4:
