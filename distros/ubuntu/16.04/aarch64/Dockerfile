@@ -1,5 +1,6 @@
 FROM scratch
 MAINTAINER David Laube <dlaube@packet.net>
+ADD qemu-aarch64-static /usr/bin/qemu-aarch64-static
 ADD rootfs.tar.gz /
 
 LABEL name="Ubuntu Canonical Base Image" \
@@ -92,4 +93,5 @@ RUN chown root:syslog /var/log \
 # Fix cloud-init EC2 warning
 RUN touch /root/.cloud-warnings.skip
 
+RUN rm /usr/bin/qemu-aarch64-static
 # vim: set tabstop=4 shiftwidth=4:
