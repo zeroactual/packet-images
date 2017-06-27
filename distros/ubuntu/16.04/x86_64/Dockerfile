@@ -78,10 +78,10 @@ RUN apt-get -q update && \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
 # TESTING - Install kernel deps
-RUN apt-get -q update && \
-	apt-get -y -qq upgrade && \
-	apt-get install -y -qq \
-	crda gettext-base grub-common grub-gfxpayload-lists grub-pc grub-pc-bin grub2-common iw libasprintf0v5 libfuse2 libnl-3-200 libnl-genl-3-200 linux-firmware os-prober thermald wireless-regdb
+#RUN apt-get -q update && \
+#	apt-get -y -qq upgrade && \
+#	apt-get install -y -qq \
+#	crda gettext-base grub-common grub-gfxpayload-lists grub-pc grub-pc-bin grub2-common iw libasprintf0v5 libfuse2 libnl-3-200 libnl-genl-3-200 linux-firmware os-prober thermald wireless-regdb
 
 # Configure locales
 RUN locale-gen en_US.UTF-8 && \
