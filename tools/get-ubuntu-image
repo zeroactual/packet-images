@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -o nounset -o pipefail -o errexit
+
+codename=$1
+arch=$2
+outdir=$3
+
+case "$codename" in
+'trusty')
+	path="http://cdimage.ubuntu.com/ubuntu-base/releases/14.04.5/release"
+	file=ubuntu-base-14.04-core-$arch.tar.gz
+	;;
+'xenial')
+	path="http://cdimage.ubuntu.com/ubuntu-base/$codename/daily/current"
+	file=$codename-base-$arch.tar.gz
+	;;
+'zesty')
+	path="http://cdimage.ubuntu.com/ubuntu-base/releases/$codename/release"
+	file=ubuntu-base-17.04-base-$arch.tar.gz
+	;;
+esac
+
+cd "$outdir"
+wget -qN "$path/$file"
+ln -s "$file" rootfs.tar.gz
