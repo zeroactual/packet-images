@@ -1,6 +1,6 @@
 FROM scratch
 MAINTAINER David Laube <dlaube@packet.net>
-ADD ubuntu-base-14.04-core-amd64.tar.gz /
+ADD rootfs.tar.gz /
 
 LABEL name="Ubuntu Canonical Base Image" \
     vendor="Ubuntu" \
