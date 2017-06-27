@@ -1,29 +1,21 @@
 #!/bin/bash
 ##
-# Usage:   ./save2image docker-save-file.tar
-# Description:	Extracts a multi-layer "docker save" TAR archive, finds the
-#		largest archives and then consolidates them within a single
-#		.tar.gz rootfs archive.
+# Usage:   ./save2image
+# Description:	Extracts a multi-layer "docker save" TAR archive from stdin,
+#		finds the largest archives and then consolidates them within a single
+#		.tar.gz rootfs archive on stdout.
 ##
 
 usage() {
 	cat >&2 <<EOF
-usage: $0 [-vh] docker-saved-file.tar
+usage: $0 [-vh]
 	-v                make verbose
 	-h		  display help
-	docker-save-file  specify the docker save file to convert, eg: docker-save-file.tar
 EOF
 }
 
 say() {
 	echo "$@" >&2
-}
-
-realpath() {
-	for arg in "$@"; do
-		cd "$(dirname "$arg")"
-		echo "$PWD/$(basename "$arg")"
-	done
 }
 
 msg() { :; }
@@ -33,29 +25,13 @@ set -e
 # Get cli options
 while getopts "vh:" OPTION; do
 	case $OPTION in
-		h) usage && exit 0 ;;
-		v) msg() { say "$@"; } ;;
-		*) usage && exit 1 ;;
+	h) usage && exit 0 ;;
+	v) v=true && msg() { say "$@"; } ;;
+	*) usage && exit 1 ;;
 	esac
 done
 
 shift $((OPTIND - 1))
-
-dockersave=$1
-if [[ -z $dockersave ]]; then
-	say "$0: No docker save file provided but is required."
-	exit 1
-fi
-
-if [[ -f $dockersave ]]; then
-	msg "Docker save file exists... good"
-else
-	say "Docker save file not valid or is missing"
-	exit 1
-fi
-
-dockersave=$(realpath "$dockersave")
-outfile=$PWD/$(basename "$dockersave")-image.gz
 
 # Check for deps
 for dep in tar jq mktemp; do
@@ -65,7 +41,7 @@ for dep in tar jq mktemp; do
 	fi
 done
 
-tmp=$(mktemp -d -t pkimage-XXXXXXX)
+tmp=$(mktemp -d -t packet-image-XXXXXXX)
 # shellcheck disable=SC2064
 trap "rm -rf $tmp" EXIT
 msg "Temp directory is: $tmp"
@@ -74,9 +50,10 @@ packdir=$tmp/consolidated
 mkdir "$packdir"
 
 cd "$tmp"
-tar -xf "$dockersave"
+msg "Extracting image"
+tar -xf-
 for layer in $(jq -r '.[0].Layers[]' manifest.json); do
-	msg "Extracting sorted layer $layer"
+	msg "Extracting layer $layer"
 	tar -xf "$layer" -C "$packdir"
 	find "$packdir" -name .wh.\* | while read -r path; do
 		rm -rf "$path" "${path#.wh.}"
@@ -84,9 +61,9 @@ for layer in $(jq -r '.[0].Layers[]' manifest.json); do
 done
 
 cd "$packdir"
-say "Creating consolidated image archive..."
-if tar -czf "$outfile" --totals --checkpoint=.1000 ./; then
-	say "Image archive $dockersave-image.gz created successfully"
+msg "Creating consolidated image archive..."
+if tar --create ${v:+--totals --checkpoint=.1000} ./ | gzip; then
+	msg "Flattened image archive created successfully"
 else
 	say "ERROR: Image archive creation failed"
 fi
