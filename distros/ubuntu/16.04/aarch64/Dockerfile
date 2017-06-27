@@ -11,7 +11,6 @@ LABEL name="Ubuntu Canonical Base Image" \
 # Setup the environment
 ENV DEBIAN_FRONTEND=noninteractive
 
-
 # Install packages
 RUN apt-get -q update && \
     apt-get -y -qq upgrade && \
@@ -36,6 +35,7 @@ RUN apt-get -q update && \
 		iptables \
 		iputils-ping \
 		less \
+		locales \
 		locate \
 		lsb-release \
 		lsof \
@@ -72,7 +72,6 @@ RUN apt-get -q update && \
 		uuid-runtime \
 		vim \
 		wget \
-		locales \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
