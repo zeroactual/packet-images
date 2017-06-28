@@ -1,4 +1,4 @@
-FROM cern/slc6-base 
+FROM cern/slc6-base
 MAINTAINER David Laube <dlaube@packet.net>
 LABEL Description="Packet's Scientific Linux 6 OS base image" Vendor="Packet.net" Version="1.0"
 
@@ -9,11 +9,15 @@ RUN yum install ${YUM_OPTS} -y \
 	cron \
 	curl \
 	device-mapper-multipath \
+	dmidecode \
+	e2fsprogs \
 	ethstatus \
 	ioping \
 	iotop \
 	iperf \
 	iscsi-initiator-utils \
+	libmlx4-static \
+	libselinux-python \
 	make \
 	mdadm \
 	mg \
@@ -21,11 +25,17 @@ RUN yum install ${YUM_OPTS} -y \
 	net-tools \
 	ntp \
 	ntpdate \
+	openssh-server \
+	policycoreutils-python \
+	python-argparse \
+	python-cheetah \
+	python-configobj \
+	python-requests \
+	PyYAML \
 	redhat-lsb-core \
 	rsync \
 	screen \
 	socat \
-	openssh-server \
 	sudo \
 	sysstat \
 	tar \
@@ -34,16 +44,6 @@ RUN yum install ${YUM_OPTS} -y \
 	traceroute \
 	vim \
 	wget \
-	python-requests \
-	python-configobj \
-	python-cheetah \
-	python-argparse \
-	policycoreutils-python \
-	libselinux-python \
-	e2fsprogs \
-	dmidecode \
-	PyYAML \
-	libmlx4-static \
 	&& yum clean all
 
 # Add cloud-init and external deps from RPM

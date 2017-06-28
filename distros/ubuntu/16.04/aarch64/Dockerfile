@@ -1,6 +1,7 @@
 FROM scratch
 MAINTAINER David Laube <dlaube@packet.net>
-ADD xenial-base-arm64.tar.gz /
+ADD qemu-aarch64-static /usr/bin/qemu-aarch64-static
+ADD rootfs.tar.gz /
 
 LABEL name="Ubuntu Canonical Base Image" \
     vendor="Ubuntu" \
@@ -10,7 +11,6 @@ LABEL name="Ubuntu Canonical Base Image" \
 
 # Setup the environment
 ENV DEBIAN_FRONTEND=noninteractive
-
 
 # Install packages
 RUN apt-get -q update && \
@@ -36,6 +36,7 @@ RUN apt-get -q update && \
 		iptables \
 		iputils-ping \
 		less \
+		locales \
 		locate \
 		lsb-release \
 		lsof \
@@ -72,15 +73,14 @@ RUN apt-get -q update && \
 		uuid-runtime \
 		vim \
 		wget \
-		locales \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
 # TESTING - Install kernel deps
-RUN apt-get -q update && \
-	apt-get -y -qq upgrade && \
-	apt-get install -y -qq \
-	crda gettext-base iw libasprintf0v5 libfuse2 libnl-3-200 libnl-genl-3-200 linux-firmware os-prober
+#RUN apt-get -q update && \
+#	apt-get -y -qq upgrade && \
+#	apt-get install -y -qq \
+#	crda gettext-base iw libasprintf0v5 libfuse2 libnl-3-200 libnl-genl-3-200 linux-firmware os-prober
 
 # Configure locales
 RUN locale-gen en_US.UTF-8 && \
@@ -93,4 +93,5 @@ RUN chown root:syslog /var/log \
 # Fix cloud-init EC2 warning
 RUN touch /root/.cloud-warnings.skip
 
+RUN rm /usr/bin/qemu-aarch64-static
 # vim: set tabstop=4 shiftwidth=4:

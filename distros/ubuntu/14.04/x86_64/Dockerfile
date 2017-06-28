@@ -1,6 +1,6 @@
 FROM scratch
 MAINTAINER David Laube <dlaube@packet.net>
-ADD ubuntu-base-14.04-core-amd64.tar.gz /
+ADD rootfs.tar.gz /
 
 LABEL name="Ubuntu Canonical Base Image" \
     vendor="Ubuntu" \
@@ -29,6 +29,8 @@ RUN apt-get -q update && \
 		iptables \
 		iputils-ping \
 		less \
+		libmlx5-1 \
+		locales \
 		lsb-release \
 		lsof \
 		make \
@@ -60,7 +62,6 @@ RUN apt-get -q update && \
 		vim \
 		wget \
 		locales \
-		libmlx5-1 \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
