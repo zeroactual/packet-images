@@ -28,7 +28,8 @@ $(images):
 	$(E)"BUILD  $@"
 	$(Q)cd $(@D) && \
 	docker build -q -t $(subst /,-,$@) . >/dev/null && \
-	docker save $(subst /,-,$@) | $(CURDIR)/tools/packet-save2image >$(@F)
+	docker save $(subst /,-,$@) | $(CURDIR)/tools/packet-save2image >$(@F).tmp && \
+	mv $(@F).tmp $(@F)
 
 distros/ubuntu/14.04/x86_64/rootfs.tar.gz:
 	$(E)"GET    $@"
