@@ -8,8 +8,8 @@ images += distros/ubuntu/16.04/aarch64/image-rootfs.tar.gz
 images += distros/ubuntu/16.04/x86_64/image-rootfs.tar.gz
 images += distros/ubuntu/17.04/x86_64/image-rootfs.tar.gz
 
-ubuntu_rootfses := $(filter ubuntu,${images})
-ubuntu_rootfses := $(ubuntu_rootfses:rootfs=image-rootfs)
+FILTER = $(foreach v,$(2),$(if $(findstring $(1),$(v)),$(v),))
+ubuntu_rootfses := $(subst image-,,$(strip $(call FILTER,ubuntu,${images})))
 
 ifeq ($V,1)
 Q=
