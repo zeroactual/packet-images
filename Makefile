@@ -21,6 +21,9 @@ E +=
 
 all: $(images)
 
+.PHONY: fetch
+fetch: $(ubuntu_rootfses)
+
 $(images):
 	$(E)"BUILD  $@"
 	$(Q)cd $(@D) && \
