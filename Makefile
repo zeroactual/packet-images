@@ -33,7 +33,7 @@ $(images):
 
 distros/ubuntu/14.04/x86_64/rootfs.tar.gz:
 	$(E)"GET    $@"
-	$(Q)tools/get-ubuntu-image xenial amd64 $(@D)
+	$(Q)tools/get-ubuntu-image trusty amd64 $(@D)
 distros/ubuntu/16.04/aarch64/rootfs.tar.gz:
 	$(E)"GET    $@"
 	$(Q)tools/get-ubuntu-image xenial arm64 $(@D)
