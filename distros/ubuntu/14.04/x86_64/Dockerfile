@@ -11,6 +11,8 @@ LABEL name="Ubuntu Canonical Base Image" \
 # Setup the environment
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Enable universe repo for libmlx5
+RUN sed -i '/^#\s*deb .* universe/ s|^#||' /etc/apt/sources.list
 
 # Install packages
 RUN apt-get -q update && \
