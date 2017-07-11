@@ -67,13 +67,11 @@ RUN apt-get -q update && \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
-# TESTING - Install kernel deps
-#RUN apt-get -q update && \
-#	apt-get -y -qq upgrade && \
-#	apt-get install -y -qq \
-#	crda gettext-base grub-common grub-gfxpayload-lists grub-pci \
-#	grub-pc-bin grub2-common iw libasprintf0v5 libfuse2 \
-#	libnl-3-200 libnl-genl-3-200 linux-firmware os-prober thermald wireless-regdb
+# Install a specific kernel
+RUN apt-get -q update && \
+        apt-get -y -qq upgrade && \
+        apt-get install -y -qq \
+        linux-image-3.13.0-123-generic
 
 # Configure locales
 RUN locale-gen en_US.UTF-8 && \
