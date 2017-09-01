@@ -56,7 +56,7 @@ for layer in $(jq -r '.[0].Layers[]' manifest.json); do
 	msg "Extracting layer $layer"
 	tar -xf "$layer" -C "$packdir"
 	find "$packdir" -name .wh.\* | while read -r path; do
-		rm -rf "$path" "${path#.wh.}"
+		rm -rf "$path" "${path/.wh./}"
 	done
 done
 
