@@ -12,6 +12,8 @@ RUN yum install ${YUM_OPTS} -y \
 	dmidecode \
 	e2fsprogs \
 	ethstatus \
+	grub \
+	grubby \
 	ioping \
 	iotop \
 	iperf \
