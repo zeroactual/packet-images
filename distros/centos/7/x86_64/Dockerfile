@@ -45,4 +45,7 @@ RUN yum update  ${YUM_OPTS} -y && \
 	wget \
 	&& yum clean all
 
+# Remove default eth0 dhcp config
+RUN rm -f /etc/sysconfig/network-scripts/ifcfg-eth0
+
 # vim: set tabstop=4 shiftwidth=4:
