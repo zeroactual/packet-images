@@ -1,11 +1,30 @@
 # Packet Images
 
-Within this repo you will find a collection of tools, examples and docs for building 
-OS images to be used on Packet.net baremetal servers.
+This repository contains Dockerfiles that we use as the basis for the OSes that we provision. The Dockerfiles contained here are the source for the official Packet.net managed images, other semi-official images are managed by the community.
+
+### Official Images
+- Centos7
+- Debian 8
+- FreeBSD (not present)
+- Scientific Linux 6
+- Ubuntu 14.04
+- Ubuntu 16.04
+- Ubuntu 17.04 (deprecated)
+- Ubuntu 17.10
+- Virtuozzo (not present)
+- VMWare (not present)
+- Windows (not present)
+
+### Semi Official Images
+- RancherOS - maintained by [Rancher](https://github.com/rancher)
+- Container Linux - maintained by [CoreOS](https://github.com/coreos)
+- NixOS - maintained by [@grahamc](https://github.com/grahamc) [NixOS](https://github.com/grahamc/packet-provision-nixos-ipxe)
+
+
+Within this repo you will find a collection of tools, examples and docs for building OS images to be used on Packet.net baremetal servers.
 
   - Building images from Dockerfile
   - Converting Docker images for use on physical baremetal servers
-  - Building images from Packer.io (coming soon!)
 
 TLDR:  Build docker image, save docker image to archive and convert the archive to a rootfs
 image. The image can be used on a baremetal physical server with or without docker.
@@ -15,24 +34,22 @@ There is only a small list of deps required to run image builds, but we recommen
 machine or VM for this purpose simply to keep things isolated.
 
  - Docker 1.1.11 and above (older version may work)
- - JQ (will be installed automatically)
+ - JQ
  - A linux docker host on top of CentOS7 / Ubuntu 16
 
 ### Installation
 **Using git:**
 
-    sudo su -
     git clone git@github.com:packethost/packet-images.git
-    cp ./tools/packet-save2image /usr/bin/
+    sudo cp ./tools/packet-save2image /usr/bin/
     chmod u+x /usr/bin/packet-save2image
 
 **or**
 
 **Using wget**
 
-    sudo su -
-    wget -O /usr/bin/packet-save2image https://raw.githubusercontent.com/packethost/packet-images/master/tools/packet-save2image
-    chmod u+x /usr/bin/packet-*
+    sudo wget -O /usr/bin/packet-save2image https://raw.githubusercontent.com/packethost/packet-images/master/tools/packet-save2image
+    sudo chmod u+x /usr/bin/packet-*
     
 ### Example image build
 Here we are walking through an example docker image build, docker image save and conversion. It really is that easy!
@@ -49,11 +66,4 @@ Here we are walking through an example docker image build, docker image save and
     Image archive ubuntu1604.tar-image.gz created successfully
     
 ### Deploying your custom image on Packet
-You have a working image built, so now what? As we work to build our community image site, this part is currently experimental and we are accepting BETA testers. Please contact help@packet.net
-
-### TODOs
-
- - Add Packer.io Docker plugin and templates
- - More to come
-
-
+You have a working image built, so now what? Run it using our custom_image feature, or use it via iPXE/Custom OS.
