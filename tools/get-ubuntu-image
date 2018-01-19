@@ -19,6 +19,10 @@ case "$codename" in
 	path="http://cdimage.ubuntu.com/ubuntu-base/releases/$codename/release"
 	file=ubuntu-base-17.04-base-$arch.tar.gz
 	;;
+'artful')
+        path="http://cdimage.ubuntu.com/ubuntu-base/releases/$codename/release"
+        file=ubuntu-base-17.10-base-$arch.tar.gz
+        ;;
 esac
 
 cd "$outdir"
