@@ -12,8 +12,8 @@ case "$codename" in
 	file=ubuntu-base-14.04-core-$arch.tar.gz
 	;;
 'xenial')
-	path="http://cdimage.ubuntu.com/ubuntu-base/$codename/daily/current"
-	file=$codename-base-$arch.tar.gz
+	path="http://cdimage.ubuntu.com/ubuntu-base/releases/$codename/release/"
+	file=ubuntu-base-16.04-base-$arch.tar.gz
 	;;
 'zesty')
 	path="http://cdimage.ubuntu.com/ubuntu-base/releases/$codename/release"
