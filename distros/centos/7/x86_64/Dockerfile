@@ -48,4 +48,13 @@ RUN yum update  ${YUM_OPTS} -y && \
 # Remove default eth0 dhcp config
 RUN rm -f /etc/sysconfig/network-scripts/ifcfg-eth0
 
+# Install a specific kernel and deps
+RUN yum -y install kernel-3.10.0-693.11.6.el7 microcode linux-firmware grub2-efi grub2 efibootmgr
+
+# Adjust generic initrd
+RUN dracut --filesystems="ext4 vfat" --mdadmconf --force /boot/initramfs-3.10.0-693.11.6.el7.x86_64.img 3.10.0-693.11.6.el7.x86_64
+
+# Adjust root account
+RUN passwd -d root && passwd -l root
+
 # vim: set tabstop=4 shiftwidth=4:
