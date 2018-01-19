@@ -1,7 +1,7 @@
-FROM multiarch/centos:7.2.1511-amd64-clean
+FROM centos:7
 MAINTAINER David Laube <dlaube@packet.net>
 LABEL Description="Packet's CentOS 7 OS base image" Vendor="Packet.net"
-LABEL Version="2017.04.13.00"
+LABEL Version="2018.01.08.00"
 
 RUN yum update  ${YUM_OPTS} -y && \
 	yum install ${YUM_OPTS} -y \
