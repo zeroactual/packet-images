@@ -36,6 +36,7 @@ RUN apt-get -q update && \
 		iperf \
 		iptables \
 		iputils-ping \
+		jq \
 		less \
 		locales \
 		locate \
