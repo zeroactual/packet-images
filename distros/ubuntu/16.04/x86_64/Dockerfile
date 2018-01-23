@@ -77,10 +77,13 @@ RUN apt-get -q update && \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
-# Install a specific kernel
+# Install a specific kernel and deps
 RUN apt-get -q update && \
 	apt-get -y -qq upgrade && \
 	apt-get install -y -qq \
+	efibootmgr \
+	grub-efi \
+	linux-firmware \
 	linux-image-4.4.0-112-generic \
 	linux-image-extra-4.4.0-112-generic
 
