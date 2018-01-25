@@ -1,38 +1,51 @@
 FROM centos:7
 MAINTAINER David Laube <dlaube@packet.net>
 LABEL Description="Packet's CentOS 7 OS base image" Vendor="Packet.net"
-LABEL Version="2018.01.08.00"
+LABEL Version="2018.01.25.00"
 
 RUN yum update  ${YUM_OPTS} -y && \
 	yum install ${YUM_OPTS} -y \
+	audit \
 	bash \
 	bash-completion \
 	ca-certificates \
+	chrony \
 	cloud-init \
+	cloud-utils-growpart \
 	cron \
 	curl \
 	device-mapper-multipath \
+	dhclient \
 	ethstatus \
+	hwdata \
 	ioping \
 	iotop \
 	iperf \
 	iscsi-initiator-utils \
+	keyutils \
 	locate \
+	logrotate \
 	make \
 	mdadm \
 	mg \
+	microcode_ctl \
 	mtr \
 	net-tools \
-	NetworkManager-team \
-	NetworkManager-tui \
 	nmap-ncat \
 	ntp \
 	ntpdate \
+    NetworkManager-team \
+    NetworkManager-tui \
+	openssh-clients \
+	openssh-server \
+	openssl \
+	parted \
+	pciutils \
 	redhat-lsb-core \
 	rsync \
+	rsyslog \
 	screen \
 	socat \
-	ssh \
 	sudo \
 	sysstat \
 	systemd \
@@ -41,6 +54,7 @@ RUN yum update  ${YUM_OPTS} -y && \
 	teamd \
 	tmux \
 	traceroute \
+	tuned \
 	vim \
 	wget \
 	&& yum clean all
