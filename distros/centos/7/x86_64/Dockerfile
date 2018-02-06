@@ -1,7 +1,8 @@
-FROM centos:7
+FROM scratch
+ADD rootfs.tar.gz /
 MAINTAINER David Laube <dlaube@packet.net>
 LABEL Description="Packet's CentOS 7 OS base image" Vendor="Packet.net"
-LABEL Version="2018.01.25.00"
+LABEL Version="2018.02.02.00"
 
 RUN yum update  ${YUM_OPTS} -y && \
 	yum install ${YUM_OPTS} -y \
@@ -62,11 +63,32 @@ RUN yum update  ${YUM_OPTS} -y && \
 # Remove default eth0 dhcp config
 RUN rm -f /etc/sysconfig/network-scripts/ifcfg-eth0
 
+# Reinstall iputils due to non-priv user bug, fix cap
+RUN yum -y reinstall iputils
+
+# Add service to fix POSIX 1003.1e capabilities on ping
+RUN bash -c "$(/bin/echo -e "cat > /usr/lib/systemd/system/setcap.service <<EOM\
+\n[Unit]\
+\nDescription=Setup setcap ping\
+\nAfter=multi-user.target\
+\n \
+\n[Service]\
+\nType=oneshot\
+\nExecStart=/usr/sbin/setcap 'cap_net_admin,cap_net_raw+ep' /usr/bin/ping\
+\nRemainAfterExit=true\
+\nStandardOutput=journal\
+\n \
+\n[Install]\
+\nWantedBy=multi-user.target\
+\nEOM\n")"
+RUN ln -s /usr/lib/systemd/system/setcap.service /etc/systemd/system/setcap.service
+RUN ln -s /usr/lib/systemd/system/setcap.service /etc/systemd/system/multi-user.target.wants/setcap.service
+
 # Install a specific kernel and deps
-RUN yum -y install kernel-3.10.0-693.11.6.el7 microcode linux-firmware grub2-efi grub2 efibootmgr
+RUN yum -y install kernel-3.10.0-693.17.1.el7 microcode linux-firmware grub2-efi grub2 efibootmgr
 
 # Adjust generic initrd
-RUN dracut --filesystems="ext4 vfat" --mdadmconf --force /boot/initramfs-3.10.0-693.11.6.el7.x86_64.img 3.10.0-693.11.6.el7.x86_64
+RUN dracut --filesystems="ext4 vfat" --mdadmconf --force /boot/initramfs-3.10.0-693.17.1.el7.x86_64.img 3.10.0-693.17.1.el7.x86_64
 
 # Adjust root account
 RUN passwd -d root && passwd -l root
