@@ -59,7 +59,7 @@ Here we are walking through an example docker image build, docker image save and
     Removing intermediate container 31c25fadd64f
     Successfully built dc3183bbe31e
     [root@buildbox ubuntu1604]# docker save ubuntu1604 > ubuntu1604.tar
-    [root@buildbox ubuntu1604]# save2image ubuntu1604.tar
+    [root@buildbox ubuntu1604]# save2image < ubuntu1604.tar > ubuntu1604.tar-image.gz
     Creating consolidated image archive...
     ....................................................
     Total bytes written: 534384640 (510MiB, 27MiB/s)
