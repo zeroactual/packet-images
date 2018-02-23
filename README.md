@@ -5,6 +5,7 @@ This repository contains Dockerfiles that we use as the basis for the OSes that 
 ### Official Images
 - Centos7
 - Debian 8
+- Debian 9
 - FreeBSD (not present)
 - Scientific Linux 6
 - Ubuntu 14.04
