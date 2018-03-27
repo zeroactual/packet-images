@@ -51,10 +51,10 @@ mkdir "$packdir"
 
 cd "$tmp"
 msg "Extracting image"
-tar -xf-
+tar --warning=no-timestamp -xf-
 for layer in $(jq -r '.[0].Layers[]' manifest.json); do
 	msg "Extracting layer $layer"
-	tar -xf "$layer" -C "$packdir"
+	tar --warning=no-timestamp -xf "$layer" -C "$packdir"
 	find "$packdir" -name .wh.\* | while read -r path; do
 		rm -rf "$path" "${path/.wh./}"
 	done
