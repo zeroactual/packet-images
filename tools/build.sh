@@ -27,9 +27,6 @@ while getopts "a:k:M:o:p:x:b:d:f:m:t:u:hv" OPTION; do
 	esac
 done
 
-## Configurables
-tmpdir=/tmp
-
 set -e -o nounset -o pipefail
 
 echo "Checking out $branch..."
