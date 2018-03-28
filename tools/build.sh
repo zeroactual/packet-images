@@ -3,11 +3,11 @@
 USAGE="Usage: $0 -d ubuntu_16_04 -t baremetal_0 -a x86_64 -b ubuntu_16_04-baremetal_0-dev
 Required Arguments:
 	-a arch      System architecture {aarch64|x86_64}
-	-b branch    Destination branch to checkout (ie: distro-type-dev)
+	-b branch    Destination branch to checkout (ie: distro-plan-dev)
 	-d distro    Operating system distro and version
-	-t type      Hardware type / plan
+	-p plan      Hardware plan
 Options:
-	-u token     Packet.net auth token
+	-t token     Packet.net auth token
 	-h           This help message
 	-v           Turn on verbose messages for debugging
 Description: This script installs the specified OS from an image file on to one or more block devices and handles the kernel and initrd for the
@@ -19,8 +19,11 @@ while getopts "a:k:M:o:p:x:b:d:f:m:t:u:hv" OPTION; do
 	a) arch=$OPTARG ;;
 	b) branch=$OPTARG ;;
 	d) distro=$OPTARG ;;
-	t) type=$OPTARG ;;
-	u) token=$OPTARG ;;
+	p) plan=$OPTARG ;;
+	t)
+		# shellcheck disable=SC2034
+		token=$OPTARG
+		;;
 	h) echo "$USAGE" && exit 0 ;;
 	v) set -x ;;
 	*) echo "$USAGE" && exit 1 ;;
