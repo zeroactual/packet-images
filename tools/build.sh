@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 USAGE="Usage: $0 -d ubuntu_16_04 -t baremetal_0 -a x86_64 -b ubuntu_16_04-baremetal_0-dev
 Required Arguments:
