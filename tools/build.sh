@@ -38,14 +38,14 @@ git checkout -B "$branch"
 echo "Create read-tree for $distro-base..."
 git read-tree --prefix="$distro-base/" -u "remotes/origin/$distro-base"
 
-echo "Create read-tree for $distro-$plan..."
-# TODO figure out how to not fetch image.tar.gz since we will overwrite it anyway
-git read-tree --prefix="$distro-$plan/" -u "remotes/origin/$distro-$plan"
-
-if [ ! -d "$distro-base/$arch" ]; then
+if [[ ! -d "$distro-base/$arch" ]]; then
 	echo "$arch doesn't exist for $distro-base! exiting..."
 	exit 1
 fi
+
+echo "Create read-tree for $distro-$plan..."
+# TODO figure out how to not fetch image.tar.gz since we will overwrite it anyway
+git read-tree --prefix="$distro-$plan/" -u "remotes/origin/$distro-$plan"
 
 echo "Build $distro-base with docker..."
 docker build -q -t "$distro-base" "./$distro-base/$arch" >/dev/null
