@@ -30,32 +30,34 @@ done
 ## Configurables
 tmpdir=/tmp
 
-## Check for read-tree support
+set -e -o nounset -o pipefail
 
 echo "Checking out $branch..."
-git checkout -B "$branch" && \
+git checkout -B "$branch"
 
 echo "Create read-tree for $distro-base..."
-git read-tree --prefix="$distro-base/" -u "remotes/origin/$distro-base" && \
+git read-tree --prefix="$distro-base/" -u "remotes/origin/$distro-base"
 
-echo "Create read-tree for $distro-$type..."
-git read-tree --prefix="$distro-$type/" -u "remotes/origin/$distro-$type" && \
+echo "Create read-tree for $distro-$plan..."
+# TODO figure out how to not fetch image.tar.gz since we will overwrite it anyway
+git read-tree --prefix="$distro-$plan/" -u "remotes/origin/$distro-$plan"
 
 if [ ! -d "$distro-base/$arch" ]; then
 	echo "$arch doesn't exist for $distro-base! exiting..."
 	exit 1
 fi
+
 echo "Build $distro-base with docker..."
-docker build -q -t "$distro-base" "./$distro-base/$arch" >/dev/null && \
-echo "Build $distro-$type with docker..."
-docker build -q -t "$distro-$type" "./$distro-$type" >/dev/null && \
-#echo "Build branch $branch for $distro-$type with docker..."
-#docker build -q -t $distro-$type . >/dev/null && \
+docker build -q -t "$distro-base" "./$distro-base/$arch" >/dev/null
+
+echo "Build $distro-$plan with docker..."
+docker build -q -t "$distro-$plan" "./$distro-$plan" >/dev/null
+
+#echo "Build branch $branch for $distro-$plan with docker..."
+#docker build -q -t $distro-$plan . >/dev/null && \
 
 echo "Save docker image"
-docker save "$distro-$type" | tools/packet-save2image >"$distro-$type-image.tar.gz.tmp" && \
-mv "$distro-$type-image.tar.gz.tmp" "$distro-$type-image.tar.gz"
-
-## Add save2image
+docker save "$distro-$plan" | tools/packet-save2image >"$distro-$plan-image.tar.gz.tmp"
+mv "$distro-$plan-image.tar.gz.tmp" "$distro-$plan-image.tar.gz"
 
 ## Push image_tag to Packet
