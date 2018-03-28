@@ -79,7 +79,8 @@ RUN apt-get -q update && \
 # Install a specific kernel
 RUN apt-get -q update && \
     apt-get install -y -qq \
-	linux-image-4.9.0-5-amd6
+    linux-image-4.9.0-5-amd6 \
+    && apt-get -y remove --purge linux-image-4.9.0-5-amd64-dbg
 
 # Assign default target
 RUN systemctl set-default multi-user
