@@ -51,6 +51,10 @@ GIT_LFS_SKIP_SMUDGE=1 git read-tree --prefix="$distro-$plan/" -u "remotes/origin
 	git lfs checkout $(awk '!/image.tar.gz/ {print $1}' .gitattributes)
 )
 
+case $distro in
+ubuntu*) ./get-ubuntu-image ;;
+centos*) ;;
+esac
 echo "Build $distro-base with docker..."
 docker build -q -t "$distro-base" "./$distro-base/$arch" >/dev/null
 
