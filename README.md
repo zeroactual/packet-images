@@ -55,9 +55,12 @@ machine or VM for this purpose simply to keep things isolated. This repo makes u
 
     sudo wget -O /usr/bin/packet-save2image https://raw.githubusercontent.com/packethost/packet-images/master/tools/packet-save2image
     sudo chmod u+x /usr/bin/packet-*
-    
+
 ### Example image build
-Here we are walking through an example docker image build, docker image save and conversion. The branch should contain install assets (image, kernel, initrd, modules) and Dockerfile. Build tools are intentionally kept separate from operating system branches. To create a new image you may create an orphan branch (to exclude any pre-existing contents.) of the packet-images repo. 
+Here we are walking through an example docker image build, docker image save and conversion.
+The branch should contain install assets (image, kernel, initrd, modules) and Dockerfile.
+Build tools are intentionally kept separate from operating system branches.
+To create a new image you may create an orphan branch (to exclude any pre-existing contents) of the packet-images repo.
 
     [packet-images]$ git checkout --orphan ubuntu_17_10-supermachine1
     [packet-images]$ git rm --cached -r .
@@ -81,6 +84,7 @@ Using build script method:
     Build debian_9-base with docker...
     Build debian_9-baremetal_0 with docker...
     Save image
- 
+
 ### Deploying your custom image on Packet
-You have a working image built, so now what? Run it using our custom_image feature, or use it via iPXE/Custom OS.
+You have a working image built, so now what?
+Run it using our custom_image feature, or use it via iPXE/Custom OS.
