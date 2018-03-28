@@ -64,11 +64,23 @@ Here we are walking through an example docker image build, docker image save and
     [packet-images]$ vi Dockerfile
     [packet-images]$ echo "RUN apt-get -y install mlx"
     [packet-images]$ docker build -t ubuntu_17_10-supermachine1 . && docker save ubuntu_17_10-supermachine1 > ubuntu_17_10-supermachine1.tar && save2-image < ubuntu_17_10-supermachine1 > image.tar.gz
+    [packet-images]$ git lfs track *.tar.gz
     [packet-images]$ git add Dockerfile .gitattributes image.tar.gz
     [packet-images]$ git commit -m "Add Mellanox package for supermachine1"
     [packet-images]$ git push origin ubuntu_17_10-supermachine1
     # get latest commit sha (latest image tag)
     [packet-images]$ git rev-parse --verify HEAD
+
+Using build script method:
+
+    [packet-images]$ ./tools/build.sh -d debian_9 -t baremetal_0 -a x86_64 -b debian_9-baremetal_0-dev
+    Checking out debian_9-baremetal_0-dev...
+    Switched to and reset branch 'debian_9-baremetal_0-dev'
+    Create read-tree for debian_9-base...
+    Create read-tree for debian_9-baremetal_0...
+    Build debian_9-base with docker...
+    Build debian_9-baremetal_0 with docker...
+    Save image
  
 ### Deploying your custom image on Packet
 You have a working image built, so now what? Run it using our custom_image feature, or use it via iPXE/Custom OS.
