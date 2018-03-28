@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-USAGE="Usage: $0 -d ubuntu_16_04 -t baremetal_0 -a x86_64 -b ubuntu_16_04-baremetal_0-dev
+USAGE="Usage: $0 -d ubuntu_16_04 -p baremetal_0 -a x86_64 -b ubuntu_16_04-baremetal_0-dev
 Required Arguments:
 	-a arch      System architecture {aarch64|x86_64}
 	-b branch    Destination branch to checkout (ie: distro-plan-dev)
@@ -44,8 +44,12 @@ if [[ ! -d "$distro-base/$arch" ]]; then
 fi
 
 echo "Create read-tree for $distro-$plan..."
-# TODO figure out how to not fetch image.tar.gz since we will overwrite it anyway
-git read-tree --prefix="$distro-$plan/" -u "remotes/origin/$distro-$plan"
+GIT_LFS_SKIP_SMUDGE=1 git read-tree --prefix="$distro-$plan/" -u "remotes/origin/$distro-$plan"
+(
+	cd "$distro-$plan"
+	# shellcheck disable=SC2046
+	git lfs checkout $(awk '!/image.tar.gz/ {print $1}' .gitattributes)
+)
 
 echo "Build $distro-base with docker..."
 docker build -q -t "$distro-base" "./$distro-base/$arch" >/dev/null
