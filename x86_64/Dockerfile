@@ -35,8 +35,8 @@ RUN yum update  ${YUM_OPTS} -y && \
 	nmap-ncat \
 	ntp \
 	ntpdate \
-    NetworkManager-team \
-    NetworkManager-tui \
+	NetworkManager-team \
+	NetworkManager-tui \
 	openssh-clients \
 	openssh-server \
 	openssl \
