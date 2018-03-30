@@ -1,4 +1,5 @@
 FROM project31/aarch64-centos:7
+
 MAINTAINER David Laube <dlaube@packet.net>
 LABEL Description="Packet's CentOS 7 OS base image" Vendor="Packet.net"
 LABEL Version="2017.04.13.00"
@@ -10,20 +11,31 @@ ADD qemu-aarch64-static /usr/bin/qemu-aarch64-static
 # Replace systemd so everything else actually works
 RUN yum clean all && yum swap -y systemd-container-libs systemd-libs
 
-RUN yum update  ${YUM_OPTS} -y && \
-	yum install ${YUM_OPTS} -y \
+RUN yum update  ${YUM_OPTS} -y && yum install ${YUM_OPTS} -y \
+	audit \
 	bash \
 	bash-completion \
 	ca-certificates \
+	chrony \
 	cloud-init \
+	cloud-utils-growpart \
+	cron \
 	curl \
 	device-mapper-multipath \
-	dosfstools \
-	e2fsprogs \
+	dhclient \
+	ethstatus \
+	hwdata \
+	ioping \
+	iotop \
+	iperf \
 	iscsi-initiator-utils \
-	libselinux-python \
+	keyutils \
+	locate \
+	logrotate \
 	make \
 	mdadm \
+	mg \
+	microcode_ctl \
 	mtr \
 	net-tools \
 	NetworkManager-team \
@@ -33,22 +45,23 @@ RUN yum update  ${YUM_OPTS} -y && \
 	ntpdate \
 	openssh-clients \
 	openssh-server \
-	policycoreutils-python \
-	python-configobj \
-	python-jsonpointer \
-	python-requests \
-	PyYAML \
+	openssl \
+	parted \
+	pciutils \
 	redhat-lsb-core \
 	rsync \
+	rsyslog \
 	screen \
 	socat \
 	sudo \
 	sysstat \
+	systemd \
 	tar \
 	tcpdump \
 	teamd \
 	tmux \
 	traceroute \
+	tuned \
 	vim \
 	wget \
 	&& yum clean all
