@@ -1,16 +1,14 @@
 FROM scratch
-MAINTAINER David Laube <dlaube@packet.net>
 ADD rootfs.tar.gz /
 
+MAINTAINER David Laube <dlaube@packet.net>
 LABEL name="Ubuntu Canonical Base Image" \
     vendor="Ubuntu" \
     license="GPLv2" \
-    build-date="20170508"
-
+    build-date="20180330"
 
 # Setup the environment
 ENV DEBIAN_FRONTEND=noninteractive
-
 
 # Install packages
 RUN apt-get -q update && \
