@@ -1,25 +1,25 @@
 FROM scratch
-MAINTAINER David Laube <dlaube@packet.net>
-ADD xenial-base-amd64.tar.gz /
+ADD rootfs.tar.gz /
 
+MAINTAINER David Laube <dlaube@packet.net>
 LABEL name="Ubuntu Canonical Base Image" \
     vendor="Ubuntu" \
     license="GPLv2" \
-    build-date="20170508"
-
+    build-date="20180330"
 
 # Setup the environment
 ENV DEBIAN_FRONTEND=noninteractive
 
+ADD qemu-aarch64-static /usr/bin
 
 # Install packages
 RUN apt-get -q update && \
     apt-get -y -qq upgrade && \
     apt-get install -y -qq \
+		apt-transport-https \
 		bash \
 		bash-completion \
 		bc \
-		biosdevname \
 		ca-certificates \
 		cloud-init \
 		cron \
@@ -36,7 +36,9 @@ RUN apt-get -q update && \
 		iperf \
 		iptables \
 		iputils-ping \
+		jq \
 		less \
+		locales \
 		locate \
 		lsb-release \
 		lsof \
@@ -73,7 +75,6 @@ RUN apt-get -q update && \
 		uuid-runtime \
 		vim \
 		wget \
-		locales \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
@@ -88,5 +89,7 @@ RUN chown root:syslog /var/log \
 
 # Fix cloud-init EC2 warning
 RUN touch /root/.cloud-warnings.skip
+
+RUN rm -f /usr/bin/qemu-aarch64-static
 
 # vim: set tabstop=4 shiftwidth=4:
