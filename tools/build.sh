@@ -3,10 +3,10 @@
 USAGE="Usage: $0 -d ubuntu_16_04 -p baremetal_0 -a x86_64 -b ubuntu_16_04-baremetal_0-dev
 Required Arguments:
 	-a arch      System architecture {aarch64|x86_64}
-	-b branch    Destination branch to checkout (ie: distro-plan-dev)
 	-d distro    Operating system distro and version
 	-p plan      Hardware plan
 Options:
+	-b branch    Destination branch to checkout (ie: distro-plan-dev)
 	-t token     Packet.net auth token
 	-h           This help message
 	-v           Turn on verbose messages for debugging
@@ -32,8 +32,10 @@ done
 
 set -e -o nounset -o pipefail
 
-echo "Checking out $branch..."
-git checkout -B "$branch"
+if [[ -n ${branch:-} ]]; then
+	echo "Checking out $branch..."
+	git checkout -B "$branch"
+fi
 
 echo "Create read-tree for $distro-base..."
 rm -rf "$distro-base/"
