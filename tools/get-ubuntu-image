@@ -1,29 +1,31 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+[[ $VERBOSE == 1 ]] && set -x
 set -o nounset -o pipefail -o errexit
 
-codename=$1
+version=$1
 arch=$2
 outdir=$3
 
-case "$codename" in
-'trusty')
-	path="http://cdimage.ubuntu.com/ubuntu-base/releases/14.04.5/release"
-	file=ubuntu-base-14.04-core-$arch.tar.gz
-	;;
-'xenial')
-	path="http://cdimage.ubuntu.com/ubuntu-base/releases/$codename/release/"
-	file=ubuntu-base-16.04.4-base-$arch.tar.gz
-	;;
-'zesty')
-	path="http://cdimage.ubuntu.com/ubuntu-base/releases/$codename/release"
-	file=ubuntu-base-17.04-base-$arch.tar.gz
-	;;
-'artful')
-        path="http://cdimage.ubuntu.com/ubuntu-base/releases/$codename/release"
-        file=ubuntu-base-17.10-base-$arch.tar.gz
-        ;;
+case $arch in
+aarch64) arch=arm64 ;;
+x86_64) arch=amd64 ;;
 esac
+
+case "$version" in
+'14.04') fullversion=$version.5 ;;
+'16.04') fullversion=$version.4 ;;
+'17.10') fullversion=$version ;;
+*) echo "$version is not supported, sorry" && exit 1 ;;
+esac
+
+path="http://cdimage.ubuntu.com/ubuntu-base/releases/$version/release"
+file=ubuntu-base-$fullversion-base-$arch.tar.gz
+
+echo "Fetching keys"
+gpg --keyserver hkp://ha.pool.sks-keyservers.net --recv-keys \
+	843938DF228D22F7B3742BC0D94AA3F0EFE21092 \
+	C5986B4F1257FFA86632CBA746181433FBB75451
 
 cd "$outdir"
 wget -qN "$path/$file" "$path/SHA256SUMS" "$path/SHA256SUMS.gpg"

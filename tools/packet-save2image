@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ##
 # Usage:   ./save2image
 # Description:	Extracts a multi-layer "docker save" TAR archive from stdin,
@@ -60,9 +60,14 @@ for layer in $(jq -r '.[0].Layers[]' manifest.json); do
 	done
 done
 
+gzip=gzip
+if which pigz &>/dev/null; then
+	gzip=pigz
+fi
+
 cd "$packdir"
 msg "Creating consolidated image archive..."
-if tar --create ${v:+--totals --checkpoint=.1000} ./ | gzip; then
+if tar --create ${v:+--totals --checkpoint=.1000} ./ | $gzip; then
 	msg "Flattened image archive created successfully"
 else
 	say "ERROR: Image archive creation failed"

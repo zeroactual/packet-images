@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-#set -o nounset -o pipefail -o errexit
+[[ $VERBOSE == 1 ]] && set -x
+set -o nounset -o pipefail -o errexit
 
 centver=$1
 arch=$2
@@ -11,28 +12,30 @@ case "$centver" in
 	path="https://cloud.centos.org/centos/7/images"
 	file=CentOS-7-$arch-GenericCloud-1801-01.raw.tar.gz
 	;;
+*) echo 'unknown centos version' && exit 1 ;;
 esac
 
+echo "Fetching keys"
+gpg --keyserver hkp://ha.pool.sks-keyservers.net --recv-keys \
+	C5986B4F1257FFA86632CBA746181433FBB75451
+
 cd "$outdir"
-wget -qN "$path/$file" "$path/sha256sum.txt" "$path/sha256sum.txt.asc" "https://www.centos.org/keys/RPM-GPG-KEY-CentOS-7"
+wget -qN "$path/$file" "$path/sha256sum.txt.asc"
 
 # verify signature and also keys used to sign
 statusf=$(mktemp -t get-centos-image-keys-XXXXXX)
-gpg --quiet --import RPM-GPG-KEY-CentOS-7
-gpg --quiet --verify --status-fd=3 sha256sum.txt.asc sha256sum.txt 3>"$statusf" 2>/dev/null
-grep -q '4288a7c038066d4686b7d829b30b662b8cc76dd3f380db452e6ac4358d6cbd45' "$statusf"
-sha256sum -c sha256sum.txt.asc 2>&1 | grep OK
+gpg --quiet --decrypt --status-fd=3 sha256sum.txt.asc >sha256sum.txt 3>"$statusf" 2>/dev/null
+grep -q 'VALIDSIG 6341AB2753D78A78A7C27BB124C6A8A7F4A80EB5' "$statusf"
 rm -f "$statusf"
 
 grep "$file" sha256sum.txt | sha256sum --status -c
-ln -s "$file" centos-image.raw.tar.gz
 
-tar -zxf centos-image.raw.tar.gz
-rawfile=$(echo $file | sed 's/.tar.gz//g')
+tar -zxf "$file"
+rawfile=${file%%.raw*}.raw
 mkdir -p /mnt/loop
-startsector=$(file $rawfile | sed -n -e 's/.* startsector *\([0-9]*\),.*/\1/p')
-offset=$(expr $startsector '*' 512)
-
-mount -o ro,loop,offset=$offset $rawfile /mnt/loop
+sectorsize=$(fdisk -l "$rawfile" | sed -n '/^Units:/ s|.*= \([0-9]\+\).*|\1|p')
+startsector=$(fdisk -l "$rawfile" | sed -n "/$rawfile/"' s|.*\*\s*\([0-9]\+\).*|\1|p')
+offset=$((startsector * sectorsize))
+mount -o ro,loop,offset=$offset "$rawfile" /mnt/loop
 tar -czf rootfs.tar.gz -C /mnt/loop .
 umount /mnt/loop
