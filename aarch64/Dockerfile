@@ -1,92 +1,93 @@
 FROM scratch
+ADD rootfs.tar.gz /
+
 MAINTAINER David Laube <dlaube@packet.net>
-ADD xenial-base-amd64.tar.gz /
+LABEL Description="Packet's CentOS 7 OS base image" Vendor="Packet.net" Version="2018.03.30.00"
 
-LABEL name="Ubuntu Canonical Base Image" \
-    vendor="Ubuntu" \
-    license="GPLv2" \
-    build-date="20170508"
+ADD qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
+RUN yum update  ${YUM_OPTS} -y && yum install ${YUM_OPTS} -y \
+	audit \
+	bash \
+	bash-completion \
+	ca-certificates \
+	chrony \
+	cloud-init \
+	cloud-utils-growpart \
+	cron \
+	curl \
+	device-mapper-multipath \
+	dhclient \
+	ethstatus \
+	hwdata \
+	ioping \
+	iotop \
+	iperf \
+	iscsi-initiator-utils \
+	keyutils \
+	locate \
+	logrotate \
+	make \
+	mdadm \
+	mg \
+	microcode_ctl \
+	mtr \
+	net-tools \
+	NetworkManager-team \
+	NetworkManager-tui \
+	nmap-ncat \
+	ntp \
+	ntpdate \
+	openssh-clients \
+	openssh-server \
+	openssl \
+	parted \
+	pciutils \
+	redhat-lsb-core \
+	rsync \
+	rsyslog \
+	screen \
+	socat \
+	sudo \
+	sysstat \
+	systemd \
+	tar \
+	tcpdump \
+	teamd \
+	tmux \
+	traceroute \
+	tuned \
+	vim \
+	wget \
+	&& yum clean all
 
-# Setup the environment
-ENV DEBIAN_FRONTEND=noninteractive
+# Remove default eth0 dhcp config
+RUN rm -f /etc/sysconfig/network-scripts/ifcfg-eth0
 
+# Reinstall iputils due to non-priv user bug, fix cap
+RUN yum -y reinstall iputils
 
-# Install packages
-RUN apt-get -q update && \
-    apt-get -y -qq upgrade && \
-    apt-get install -y -qq \
-		bash \
-		bash-completion \
-		bc \
-		biosdevname \
-		ca-certificates \
-		cloud-init \
-		cron \
-		curl \
-		dbus \
-		dstat \
-		ethstatus \
-		file \
-		fio \
-		htop \
-		ifenslave \
-		ioping \
-		iotop \
-		iperf \
-		iptables \
-		iputils-ping \
-		less \
-		locate \
-		lsb-release \
-		lsof \
-		make \
-		man-db \
-		mdadm \
-		mg \
-		mosh \
-		mtr \
-		multipath-tools \
-		nano \
-		net-tools \
-		netcat \
-		nmap \
-		ntp \
-		ntpdate \
-		open-iscsi \
-		python-apt \
-		python-yaml \
-		rsync \
-		rsyslog \
-		screen \
-		shunit2 \
-		socat \
-		software-properties-common \
-		ssh \
-		sudo \
-		sysstat \
-		tar \
-		tcpdump \
-		tmux \
-		traceroute \
-		unattended-upgrades \
-		uuid-runtime \
-		vim \
-		wget \
-		locales \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
+# Add service to fix POSIX 1003.1e capabilities on ping
+RUN bash -c "$(/bin/echo -e "cat > /usr/lib/systemd/system/setcap.service <<EOM\
+\n[Unit]\
+\nDescription=Setup setcap ping\
+\nAfter=multi-user.target\
+\n \
+\n[Service]\
+\nType=oneshot\
+\nExecStart=/usr/sbin/setcap 'cap_net_admin,cap_net_raw+ep' /usr/bin/ping\
+\nRemainAfterExit=true\
+\nStandardOutput=journal\
+\n \
+\n[Install]\
+\nWantedBy=multi-user.target\
+\nEOM\n")"
+RUN ln -s /usr/lib/systemd/system/setcap.service /etc/systemd/system/setcap.service
+RUN ln -s /usr/lib/systemd/system/setcap.service /etc/systemd/system/multi-user.target.wants/setcap.service
 
+# Adjust root account
+RUN passwd -d root && passwd -l root
 
-# Configure locales
-RUN locale-gen en_US.UTF-8 && \
-    dpkg-reconfigure locales
-
-# Fix permissions
-RUN chown root:syslog /var/log \
-	&& chmod 755 /etc/default
-
-# Fix cloud-init EC2 warning
-RUN touch /root/.cloud-warnings.skip
+RUN rm /usr/bin/qemu-aarch64-static
 
 # vim: set tabstop=4 shiftwidth=4:

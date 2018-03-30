@@ -1,11 +1,10 @@
 FROM scratch
 ADD rootfs.tar.gz /
-MAINTAINER David Laube <dlaube@packet.net>
-LABEL Description="Packet's CentOS 7 OS base image" Vendor="Packet.net"
-LABEL Version="2018.02.02.00"
 
-RUN yum update  ${YUM_OPTS} -y && \
-	yum install ${YUM_OPTS} -y \
+MAINTAINER David Laube <dlaube@packet.net>
+LABEL Description="Packet's CentOS 7 OS base image" Vendor="Packet.net" Version="2018.03.30.00"
+
+RUN yum update  ${YUM_OPTS} -y && yum install ${YUM_OPTS} -y \
 	audit \
 	bash \
 	bash-completion \
@@ -32,11 +31,11 @@ RUN yum update  ${YUM_OPTS} -y && \
 	microcode_ctl \
 	mtr \
 	net-tools \
+	NetworkManager-team \
+	NetworkManager-tui \
 	nmap-ncat \
 	ntp \
 	ntpdate \
-	NetworkManager-team \
-	NetworkManager-tui \
 	openssh-clients \
 	openssh-server \
 	openssl \
