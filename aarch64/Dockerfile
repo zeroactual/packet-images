@@ -11,6 +11,7 @@ LABEL name="Ubuntu Canonical Base Image" \
 # Setup the environment
 ENV DEBIAN_FRONTEND=noninteractive
 
+ADD qemu-aarch64-static /usr/bin
 
 # Install packages
 RUN apt-get -q update && \
@@ -88,5 +89,7 @@ RUN chown root:syslog /var/log \
 
 # Fix cloud-init EC2 warning
 RUN touch /root/.cloud-warnings.skip
+
+RUN rm -f /usr/bin/qemu-aarch64-static
 
 # vim: set tabstop=4 shiftwidth=4:
