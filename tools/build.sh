@@ -79,7 +79,8 @@ docker build -t "$distro-$plan" "./$distro-$plan"
 #docker build -q -t $distro-$plan . >/dev/null && \
 
 echo "Save docker image"
-docker save "$distro-$plan" | tools/packet-save2image >"$distro-$plan-image.tar.gz.tmp"
+# shellcheck disable=SC2024
+docker save "$distro-$plan" | fakeroot tools/packet-save2image >"$distro-$plan-image.tar.gz.tmp"
 mv "$distro-$plan-image.tar.gz.tmp" "$distro-$plan-image.tar.gz"
 
 ## Push image_tag to Packet
