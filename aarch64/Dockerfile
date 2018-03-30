@@ -19,7 +19,6 @@ RUN apt-get -q update && \
 		bash \
 		bash-completion \
 		bc \
-		biosdevname \
 		ca-certificates \
 		cloud-init \
 		cron \
