@@ -61,5 +61,33 @@ RUN yum update  ${YUM_OPTS} -y && yum install ${YUM_OPTS} -y \
 	wget \
 	&& yum clean all
 
+# Remove default eth0 dhcp config
+RUN rm -f /etc/sysconfig/network-scripts/ifcfg-eth0
+
+# Reinstall iputils due to non-priv user bug, fix cap
+RUN yum -y reinstall iputils
+
+# Add service to fix POSIX 1003.1e capabilities on ping
+RUN bash -c "$(/bin/echo -e "cat > /usr/lib/systemd/system/setcap.service <<EOM\
+\n[Unit]\
+\nDescription=Setup setcap ping\
+\nAfter=multi-user.target\
+\n \
+\n[Service]\
+\nType=oneshot\
+\nExecStart=/usr/sbin/setcap 'cap_net_admin,cap_net_raw+ep' /usr/bin/ping\
+\nRemainAfterExit=true\
+\nStandardOutput=journal\
+\n \
+\n[Install]\
+\nWantedBy=multi-user.target\
+\nEOM\n")"
+RUN ln -s /usr/lib/systemd/system/setcap.service /etc/systemd/system/setcap.service
+RUN ln -s /usr/lib/systemd/system/setcap.service /etc/systemd/system/multi-user.target.wants/setcap.service
+
+# Adjust root account
+RUN passwd -d root && passwd -l root
+
 RUN rm /usr/bin/qemu-aarch64-static
+
 # vim: set tabstop=4 shiftwidth=4:
