@@ -1,12 +1,11 @@
 FROM scratch
-MAINTAINER David Laube <dlaube@packet.net>
 ADD rootfs.tar.gz /
 
+MAINTAINER David Laube <dlaube@packet.net>
 LABEL name="Ubuntu Canonical Base Image" \
     vendor="Ubuntu" \
     license="GPLv2" \
-    build-date="20170508"
-
+    build-date="20180330"
 
 # Setup the environment
 ENV DEBIAN_FRONTEND=noninteractive
@@ -18,6 +17,7 @@ RUN sed -i '/^#\s*deb .* universe/ s|^#||' /etc/apt/sources.list
 RUN apt-get -q update && \
     apt-get -y -qq upgrade && \
     apt-get install -y -qq \
+		apt-transport-https \
 		bash \
 		bash-completion \
 		bc \
