@@ -17,6 +17,7 @@ ADD qemu-aarch64-static /usr/bin
 RUN apt-get -q update && \
     apt-get -y -qq upgrade && \
     apt-get install -y -qq \
+		apt-transport-https \
 		bash \
 		bash-completion \
 		bc \

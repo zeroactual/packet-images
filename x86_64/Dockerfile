@@ -16,6 +16,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -q update && \
     apt-get -y -qq upgrade && \
     apt-get install -y -qq \
+		apt-transport-https \
 		bash \
 		bash-completion \
 		bc \
