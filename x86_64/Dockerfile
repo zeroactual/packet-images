@@ -7,7 +7,6 @@ LABEL name="Ubuntu Canonical Base Image" \
     license="GPLv2" \
     build-date="20170508"
 
-
 # Setup the environment
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -35,6 +34,7 @@ RUN apt-get -q update && \
 		iperf \
 		iptables \
 		iputils-ping \
+		jq \
 		less \
 		locales \
 		locate \
