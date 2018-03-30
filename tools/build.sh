@@ -36,7 +36,9 @@ echo "Checking out $branch..."
 git checkout -B "$branch"
 
 echo "Create read-tree for $distro-base..."
+rm -rf "$distro-base/"
 git read-tree --prefix="$distro-base/" -u "remotes/origin/$distro-base"
+git reset HEAD
 
 if [[ ! -d "$distro-base/$arch" ]]; then
 	echo "$arch doesn't exist for $distro-base! exiting..."
@@ -51,7 +53,9 @@ if [[ $arch == aarch64 ]]; then
 fi
 
 echo "Create read-tree for $distro-$plan..."
+rm -rf "$distro-$plan/"
 GIT_LFS_SKIP_SMUDGE=1 git read-tree --prefix="$distro-$plan/" -u "remotes/origin/$distro-$plan"
+git reset HEAD
 (
 	cd "$distro-$plan"
 	# shellcheck disable=SC2046
