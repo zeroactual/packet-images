@@ -43,6 +43,13 @@ if [[ ! -d "$distro-base/$arch" ]]; then
 	exit 1
 fi
 
+if [[ $arch == aarch64 ]]; then
+	wget -qN https://github.com/multiarch/qemu-user-static/releases/download/v2.11.0/qemu-aarch64-static
+	echo '6e6829651103fa4d2e009e7e01cfdf39a46ffd53b2297075d9b70de20f965f97  qemu-aarch64-static' | sha256sum -c
+	chmod +x qemu-aarch64-static
+	cp qemu-aarch64-static "$distro-base/$arch"
+fi
+
 echo "Create read-tree for $distro-$plan..."
 GIT_LFS_SKIP_SMUDGE=1 git read-tree --prefix="$distro-$plan/" -u "remotes/origin/$distro-$plan"
 (
