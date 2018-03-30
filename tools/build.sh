@@ -34,7 +34,7 @@ set -e -o nounset -o pipefail
 
 if [[ -n ${branch:-} ]]; then
 	echo "Checking out $branch..."
-	git checkout -B "$branch"
+	GIT_LFS_SKIP_SMUDGE=1 git checkout "$branch"
 fi
 
 echo "Create read-tree for $distro-base..."
@@ -81,7 +81,9 @@ docker build -t "$distro-$plan" "./$distro-$plan"
 echo "Save docker image"
 # shellcheck disable=SC2024
 docker save "$distro-$plan" | fakeroot tools/packet-save2image >"$distro-$plan-image.tar.gz.tmp"
-mv "$distro-$plan-image.tar.gz.tmp" "$distro-$plan-image.tar.gz"
+
+mv "$distro-plan/*" .
+mv "$distro-$plan-image.tar.gz.tmp" image.tar.gz
 
 if [[ -n ${branch:-} ]]; then
 	echo "commiting and tagging"
