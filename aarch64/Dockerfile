@@ -1,92 +1,60 @@
-FROM scratch
+FROM project31/aarch64-centos:7
 MAINTAINER David Laube <dlaube@packet.net>
-ADD xenial-base-amd64.tar.gz /
+LABEL Description="Packet's CentOS 7 OS base image" Vendor="Packet.net"
+LABEL Version="2017.04.13.00"
 
-LABEL name="Ubuntu Canonical Base Image" \
-    vendor="Ubuntu" \
-    license="GPLv2" \
-    build-date="20170508"
+ADD qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
+#RUN curl https://gist.githubusercontent.com/dlaube/722dff81744fa9f2f17d2f634317a3be/raw/d3b8fa3e511487ae390997a26cc3dfd2db1f14d9/centos7-arm-aarch64-yum-repo > /etc/yum.repos.d/CentOS-Base.repo
 
-# Setup the environment
-ENV DEBIAN_FRONTEND=noninteractive
+# Replace systemd so everything else actually works
+RUN yum clean all && yum swap -y systemd-container-libs systemd-libs
 
+RUN yum update  ${YUM_OPTS} -y && \
+	yum install ${YUM_OPTS} -y \
+	bash \
+	bash-completion \
+	ca-certificates \
+	cloud-init \
+	curl \
+	device-mapper-multipath \
+	dosfstools \
+	e2fsprogs \
+	iscsi-initiator-utils \
+	libselinux-python \
+	make \
+	mdadm \
+	mtr \
+	net-tools \
+	NetworkManager-team \
+	NetworkManager-tui \
+	nmap-ncat \
+	ntp \
+	ntpdate \
+	openssh-clients \
+	openssh-server \
+	policycoreutils-python \
+	python-configobj \
+	python-jsonpointer \
+	python-requests \
+	PyYAML \
+	redhat-lsb-core \
+	rsync \
+	screen \
+	socat \
+	sudo \
+	sysstat \
+	tar \
+	tcpdump \
+	teamd \
+	tmux \
+	traceroute \
+	vim \
+	wget \
+	&& yum clean all
 
-# Install packages
-RUN apt-get -q update && \
-    apt-get -y -qq upgrade && \
-    apt-get install -y -qq \
-		bash \
-		bash-completion \
-		bc \
-		biosdevname \
-		ca-certificates \
-		cloud-init \
-		cron \
-		curl \
-		dbus \
-		dstat \
-		ethstatus \
-		file \
-		fio \
-		htop \
-		ifenslave \
-		ioping \
-		iotop \
-		iperf \
-		iptables \
-		iputils-ping \
-		less \
-		locate \
-		lsb-release \
-		lsof \
-		make \
-		man-db \
-		mdadm \
-		mg \
-		mosh \
-		mtr \
-		multipath-tools \
-		nano \
-		net-tools \
-		netcat \
-		nmap \
-		ntp \
-		ntpdate \
-		open-iscsi \
-		python-apt \
-		python-yaml \
-		rsync \
-		rsyslog \
-		screen \
-		shunit2 \
-		socat \
-		software-properties-common \
-		ssh \
-		sudo \
-		sysstat \
-		tar \
-		tcpdump \
-		tmux \
-		traceroute \
-		unattended-upgrades \
-		uuid-runtime \
-		vim \
-		wget \
-		locales \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
+RUN systemctl enable cloud-init
+RUN yum -y reinstall cracklib-dicts
 
-
-# Configure locales
-RUN locale-gen en_US.UTF-8 && \
-    dpkg-reconfigure locales
-
-# Fix permissions
-RUN chown root:syslog /var/log \
-	&& chmod 755 /etc/default
-
-# Fix cloud-init EC2 warning
-RUN touch /root/.cloud-warnings.skip
-
+RUN rm /usr/bin/qemu-aarch64-static
 # vim: set tabstop=4 shiftwidth=4:
