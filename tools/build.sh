@@ -83,4 +83,11 @@ echo "Save docker image"
 docker save "$distro-$plan" | fakeroot tools/packet-save2image >"$distro-$plan-image.tar.gz.tmp"
 mv "$distro-$plan-image.tar.gz.tmp" "$distro-$plan-image.tar.gz"
 
+if [[ -n ${branch:-} ]]; then
+	echo "commiting and tagging"
+	git add -u
+	git commit -m 'commit artifacts'
+	git tag-and-release "$branch-":w
+fi
+
 ## Push image_tag to Packet
