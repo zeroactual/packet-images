@@ -64,10 +64,10 @@ os=${distro%%_*}
 ./tools/"get-$os-image" "$version" "$arch" "$distro-base/$arch"
 
 echo "Build $distro-base with docker..."
-docker build -q -t "$distro-base" "./$distro-base/$arch" >/dev/null
+docker build -t "$distro-base" "./$distro-base/$arch"
 
 echo "Build $distro-$plan with docker..."
-docker build -q -t "$distro-$plan" "./$distro-$plan" >/dev/null
+docker build -t "$distro-$plan" "./$distro-$plan"
 
 #echo "Build branch $branch for $distro-$plan with docker..."
 #docker build -q -t $distro-$plan . >/dev/null && \
