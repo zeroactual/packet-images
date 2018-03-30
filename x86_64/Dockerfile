@@ -18,6 +18,7 @@ RUN sed -i '/^#\s*deb .* universe/ s|^#||' /etc/apt/sources.list
 RUN apt-get -q update && \
     apt-get -y -qq upgrade && \
     apt-get install -y -qq \
+		apt-transport-https \
 		bash \
 		bash-completion \
 		bc \
