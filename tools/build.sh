@@ -82,7 +82,7 @@ if [[ -n ${branch:-} ]]; then
 	echo "Checking out $branch..."
 	GIT_LFS_SKIP_SMUDGE=1 git checkout "$branch"
 
-	mv "work/$distro-$plan/*" .
+	mv "work/$distro-$plan/"* .
 	mv "$distro-$plan-image.tar.gz" image.tar.gz
 	ls -al
 
