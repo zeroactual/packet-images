@@ -89,7 +89,7 @@ if [[ -n ${branch:-} ]]; then
 	echo "commiting and tagging"
 	git add -u
 	git commit -m 'commit artifacts'
-	ALLOW_NON_MASTER=1 git tag-and-release "$branch-":w
+	ALLOW_NON_MASTER=1 git tag-and-release "$branch"
 fi
 
 ## Push image_tag to Packet
