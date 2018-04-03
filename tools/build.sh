@@ -32,17 +32,12 @@ done
 
 set -e -o nounset -o pipefail
 
-if [[ -n ${branch:-} ]]; then
-	echo "Checking out $branch..."
-	git checkout -B "$branch"
-fi
-
-echo "Create read-tree for $distro-base..."
-rm -rf "$distro-base/"
-git read-tree --prefix="$distro-base/" -u "remotes/origin/$distro-base"
+echo "Create read-tree for work/$distro-base..."
+rm -rf "work/$distro-base/"
+git read-tree --prefix="work/$distro-base/" -u "remotes/origin/$distro-base"
 git reset HEAD
 
-if [[ ! -d "$distro-base/$arch" ]]; then
+if [[ ! -d "work/$distro-base/$arch" ]]; then
 	echo "$arch doesn't exist for $distro-base! exiting..."
 	exit 1
 fi
@@ -51,15 +46,15 @@ if [[ $arch == aarch64 ]]; then
 	wget -qN https://github.com/multiarch/qemu-user-static/releases/download/v2.11.0/qemu-aarch64-static
 	echo '6e6829651103fa4d2e009e7e01cfdf39a46ffd53b2297075d9b70de20f965f97  qemu-aarch64-static' | sha256sum -c
 	chmod +x qemu-aarch64-static
-	cp qemu-aarch64-static "$distro-base/$arch"
+	cp qemu-aarch64-static "work/$distro-base/$arch"
 fi
 
 echo "Create read-tree for $distro-$plan..."
-rm -rf "$distro-$plan/"
-GIT_LFS_SKIP_SMUDGE=1 git read-tree --prefix="$distro-$plan/" -u "remotes/origin/$distro-$plan"
+rm -rf "work/$distro-$plan/"
+GIT_LFS_SKIP_SMUDGE=1 git read-tree --prefix="work/$distro-$plan/" -u "remotes/origin/$distro-$plan"
 git reset HEAD
 (
-	cd "$distro-$plan"
+	cd "work/$distro-$plan"
 	# shellcheck disable=SC2046
 	git lfs checkout $(awk '!/image.tar.gz/ {print $1}' .gitattributes)
 )
@@ -67,13 +62,13 @@ git reset HEAD
 # shellcheck disable=SC2001
 version=$(echo "${distro#*_}" | sed 's|_|.|g')
 os=${distro%%_*}
-./tools/"get-$os-image" "$version" "$arch" "$distro-base/$arch"
+./tools/"get-$os-image" "$version" "$arch" "work/$distro-base/$arch"
 
 echo "Build $distro-base with docker..."
-docker build -t "$distro-base" "./$distro-base/$arch"
+docker build -t "$distro-base" "work/$distro-base/$arch"
 
 echo "Build $distro-$plan with docker..."
-docker build -t "$distro-$plan" "./$distro-$plan"
+docker build -t "$distro-$plan" "work/$distro-$plan"
 
 #echo "Build branch $branch for $distro-$plan with docker..."
 #docker build -q -t $distro-$plan . >/dev/null && \
@@ -82,5 +77,19 @@ echo "Save docker image"
 # shellcheck disable=SC2024
 docker save "$distro-$plan" | fakeroot tools/packet-save2image >"$distro-$plan-image.tar.gz.tmp"
 mv "$distro-$plan-image.tar.gz.tmp" "$distro-$plan-image.tar.gz"
+
+if [[ -n ${branch:-} ]]; then
+	echo "Checking out $branch..."
+	GIT_LFS_SKIP_SMUDGE=1 git checkout "$branch"
+
+	mv "work/$distro-$plan/"* .
+	mv "$distro-$plan-image.tar.gz" image.tar.gz
+	ls -al
+
+	echo "commiting and tagging"
+	git add -u
+	git commit -m 'commit artifacts'
+	ALLOW_NON_MASTER=1 git tag-and-release "$branch"
+fi
 
 ## Push image_tag to Packet
