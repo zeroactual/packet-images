@@ -80,7 +80,12 @@ mv "$distro-$plan-image.tar.gz.tmp" "$distro-$plan-image.tar.gz"
 
 if [[ -n ${branch:-} ]]; then
 	echo "Checking out $branch..."
-	GIT_LFS_SKIP_SMUDGE=1 git checkout "$branch"
+	if [[ `git branch --list $branch` ]] ; then
+		GIT_LFS_SKIP_SMUDGE=1 git checkout "$branch"
+	else
+        	echo "Branch $branch doesnt exist yet! Creating..."
+		GIT_LFS_SKIP_SMUDGE=1 git checkout -b "$branch"
+	fi
 
 	mv "work/$distro-$plan/"* .
 	mv "$distro-$plan-image.tar.gz" image.tar.gz
