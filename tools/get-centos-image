@@ -58,8 +58,8 @@ fi
 
 
 echo "Mounting raw file..."
-mount -o ro,loop,offset=$offset "$rawfile" $mntpoint
+sudo mount -o ro,loop,offset=$offset "$rawfile" $mntpoint
 
 echo "Making rootfs archive from mount..."
 tar -czf rootfs.tar.gz -C $mntpoint .
-umount $mntpoint
+sudo umount $mntpoint
