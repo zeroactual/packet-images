@@ -6,6 +6,7 @@ set -o nounset -o pipefail -o errexit
 centver=$1
 arch=$2
 outdir=$3
+mntpoint=/mnt/loop
 
 case "$centver" in
 '7')
@@ -15,27 +16,50 @@ case "$centver" in
 *) echo 'unknown centos version' && exit 1 ;;
 esac
 
+if mount | grep $mntpoint > /dev/null; then
+	echo "Abort! Is $mntpoint already in use?"
+	exit 1
+else
+	echo "Mountpoint $mntpoint is available"
+fi
+
 echo "Fetching keys"
-gpg --keyserver hkp://ha.pool.sks-keyservers.net --recv-keys \
-	C5986B4F1257FFA86632CBA746181433FBB75451
+wget -4 http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-7 -O /tmp/RPM-GPG-KEY-CentOS-7
 
+echo "Import keys"
+gpg --import /tmp/RPM-GPG-KEY-CentOS-7
+gpg --quiet --with-fingerprint /tmp/RPM-GPG-KEY-CentOS-7
+
+echo "Fetching official base"
 cd "$outdir"
-wget -qN "$path/$file" "$path/sha256sum.txt.asc"
+wget -4 -qN "$path/$file" "$path/sha256sum.txt.asc" "$path/sha256sum.txt"
 
-# verify signature and also keys used to sign
+echo "Verifying sha256..."
+grep "$file" sha256sum.txt | sha256sum --status -c
 statusf=$(mktemp -t get-centos-image-keys-XXXXXX)
-gpg --quiet --decrypt --status-fd=3 sha256sum.txt.asc >sha256sum.txt 3>"$statusf" 2>/dev/null
-grep -q 'VALIDSIG 6341AB2753D78A78A7C27BB124C6A8A7F4A80EB5' "$statusf"
+gpg --verify --status-fd=3 ./sha256sum.txt.asc 3>"$statusf"
+grep -q "VALIDSIG 6341AB2753D78A78A7C27BB124C6A8A7F4A80EB5" "$statusf"
+grep $file sha256sum.txt.asc | tee /proc/self/fd/2 | sha256sum --check - | grep OK
 rm -f "$statusf"
 
-grep "$file" sha256sum.txt | sha256sum --status -c
-
+echo "Extracting raw archive..."
 tar -zxf "$file"
 rawfile=${file%%.raw*}.raw
-mkdir -p /mnt/loop
-sectorsize=$(fdisk -l "$rawfile" | sed -n '/^Units:/ s|.*= \([0-9]\+\).*|\1|p')
+mkdir -p $mntpoint
+
 startsector=$(fdisk -l "$rawfile" | sed -n "/$rawfile/"' s|.*\*\s*\([0-9]\+\).*|\1|p')
+sectorsize=$(fdisk -l "$rawfile" | sed -n '/^Units:/ s|.*= \([0-9]\+\).*|\1|p')
 offset=$((startsector * sectorsize))
-mount -o ro,loop,offset=$offset "$rawfile" /mnt/loop
-tar -czf rootfs.tar.gz -C /mnt/loop .
-umount /mnt/loop
+
+if [ -z "$sectorsize" ]; then
+	startsector=$(file $rawfile | sed -n -e 's/.* startsector *\([0-9]*\),.*/\1/p')
+	offset=$(expr $startsector '*' 512)
+fi
+
+
+echo "Mounting raw file..."
+mount -o ro,loop,offset=$offset "$rawfile" $mntpoint
+
+echo "Making rootfs archive from mount..."
+tar -czf rootfs.tar.gz -C $mntpoint .
+umount $mntpoint
