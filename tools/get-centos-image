@@ -40,7 +40,7 @@ grep "$file" sha256sum.txt | sha256sum --status -c
 statusf=$(mktemp -t get-centos-image-keys-XXXXXX)
 gpg --verify --status-fd=3 ./sha256sum.txt.asc 3>"$statusf"
 grep -q "VALIDSIG 6341AB2753D78A78A7C27BB124C6A8A7F4A80EB5" "$statusf"
-grep $file sha256sum.txt.asc | tee /proc/self/fd/2 | sha256sum --check - | grep OK
+grep $file sha256sum.txt.asc | sudo tee /proc/self/fd/2 | sha256sum --check - | grep OK
 rm -f "$statusf"
 
 echo "Extracting raw archive..."
