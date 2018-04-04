@@ -90,11 +90,13 @@ if [[ -n ${branch:-} ]]; then
 	mv "work/$distro-$plan/"* .
 	mv "$distro-$plan-image.tar.gz" image.tar.gz
 	ls -al
+	git lfs track *.tar.gz
+	git add *.tar.gz Dockerfile .gitattributes
 
-	echo "commiting and tagging"
-	git add -u
-	git commit -m 'commit artifacts'
-	ALLOW_NON_MASTER=1 git tag-and-release "$branch"
+	#echo "commiting and tagging"
+	#git add -u
+	#git commit -m 'commit artifacts'
+	#ALLOW_NON_MASTER=1 git tag-and-release "$branch"
 fi
 
 ## Push image_tag to Packet
