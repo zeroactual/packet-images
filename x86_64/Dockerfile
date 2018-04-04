@@ -57,6 +57,7 @@ RUN yum update  ${YUM_OPTS} -y && yum install ${YUM_OPTS} -y \
 	tuned \
 	vim \
 	wget \
+	yum-plugin-ovl \
 	&& yum clean all
 
 # Remove default eth0 dhcp config
