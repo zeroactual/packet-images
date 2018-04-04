@@ -89,6 +89,7 @@ if [[ -n ${branch:-} ]]; then
 
 	mv "work/$distro-$plan/"* .
 	mv "$distro-$plan-image.tar.gz" image.tar.gz
+	./tools/"archive-$os" image.tar.gz ./
 	ls -al
 	git lfs track *.tar.gz
 	git add *.tar.gz Dockerfile .gitattributes
