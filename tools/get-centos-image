@@ -63,4 +63,7 @@ sudo mount -o ro,loop,offset=$offset "$rawfile" $mntpoint
 
 echo "Making rootfs archive from mount..."
 tar -czf rootfs.tar.gz -C $mntpoint .
+
+echo "Cleaning up..."
 sudo umount $mntpoint
+rm -f $file $rawfile
