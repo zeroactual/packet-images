@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# ./script <old image sha> <new image sha>
+# ./script <old image sha>
 
 IMAGEOLD=$1
-IMAGENEW=$2
 TMP=/tmp
 
 dirold=$TMP/compare-old
@@ -16,21 +15,15 @@ git -C $dirold remote add origin https://github.com/packethost/packet-images.git
 git -C $dirold fetch origin &>/dev/null
 git -C $dirold checkout "$IMAGEOLD" &>/dev/null
 
-#echo "Getting new image $IMAGENEW"
-git -C $dirnew init &>/dev/null
-git -C $dirnew remote add origin https://github.com/packethost/packet-images.git &>/dev/null
-git -C $dirnew fetch origin &>/dev/null
-git -C $dirnew checkout "$IMAGENEW" &>/dev/null
-
 echo "======================================================================"
 echo "Image size:"
 echo "======================================================================"
 echo "OLD image: $(du -sh $dirold/image.tar.gz | awk {'print $1'})"
-echo "NEW image: $(du -sh $dirnew/image.tar.gz | awk {'print $1'})"
+echo "NEW image: $(du -sh ./image.tar.gz | awk {'print $1'})"
 
 mkdir -p $dirold/imagefs $dirnew/imagefs
 tar -zxf $dirold/image.tar.gz -C $dirold/imagefs
-tar -zxf $dirnew/image.tar.gz -C $dirnew/imagefs
+tar -zxf ./image.tar.gz -C $dirnew/imagefs
 
 echo "OLD imagefs: $(du -sh $dirold/imagefs | awk {'print $1'})"
 echo "NEW imagefs: $(du -sh $dirnew/imagefs | awk {'print $1'})"
