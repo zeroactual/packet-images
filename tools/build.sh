@@ -92,7 +92,11 @@ if [[ -n ${branch:-} ]]; then
 	./tools/"archive-$os" image.tar.gz ./
 	ls -al
 	git lfs track *.tar.gz
-	git add *.tar.gz Dockerfile .gitattributes
+	OLDIMAGE=$(git ls-remote | grep "refs/heads/$os-$plan" | awk {'print $1'})
+	echo "Generating CHANGELOG based on previous image $OLDIMAGE"
+	touch CHANGELOG
+	./tools/compare-centos $OLDIMAGE >> CHANGELOG
+	git add *.tar.gz Dockerfile .gitattributes CHANGELOG
 
 	#echo "commiting and tagging"
 	#git add -u
