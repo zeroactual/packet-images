@@ -92,7 +92,7 @@ if [[ -n ${branch:-} ]]; then
 	./tools/"archive-$os" image.tar.gz ./
 	ls -al
 	git lfs track *.tar.gz
-	OLDIMAGE=$(git ls-remote | grep "refs/heads/$os-$plan" | awk {'print $1'})
+	OLDIMAGE=$(git ls-remote | grep "refs/heads/$distro-$plan" | awk {'print $1'})
 	echo "Generating CHANGELOG based on previous image $OLDIMAGE"
 	touch CHANGELOG
 	./tools/compare-centos $OLDIMAGE >> CHANGELOG
