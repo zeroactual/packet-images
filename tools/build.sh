@@ -84,7 +84,8 @@ if [[ -n ${branch:-} ]]; then
 		GIT_LFS_SKIP_SMUDGE=1 git checkout "$branch"
 	else
         	echo "Branch $branch doesnt exist yet! Creating..."
-		GIT_LFS_SKIP_SMUDGE=1 git checkout -b "$branch"
+		git checkout --orphan $branch
+		git rm --cached -r .
 	fi
 
 	mv "work/$distro-$plan/"* .
