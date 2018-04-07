@@ -96,7 +96,7 @@ if [[ -n ${branch:-} ]]; then
 	OLDIMAGE=$(git ls-remote | grep "refs/heads/$distro-$plan" | awk {'print $1'})
 	echo "Generating CHANGELOG based on previous image $OLDIMAGE"
 	touch CHANGELOG
-	./tools/compare-centos $OLDIMAGE >> CHANGELOG
+	./tools/compare-$os $OLDIMAGE >> CHANGELOG
 	git add *.tar.gz Dockerfile .gitattributes CHANGELOG
 
 	#echo "commiting and tagging"
