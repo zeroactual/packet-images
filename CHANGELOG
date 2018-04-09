@@ -1,0 +1,129 @@
+======================================================================
+Image size:
+======================================================================
+OLD image: 191M
+NEW image: 262M
+OLD imagefs: 562M
+NEW imagefs: 758M
+======================================================================
+Package count:
+======================================================================
+OLD packages: 413
+NEW packages: 424
+======================================================================
+Package diff:
+======================================================================
+15a16
+> busybox
+19a21
+> cpio
+44a47
+> firmware-linux-free
+62a66
+> initramfs-tools
+71a76
+> irqbalance
+74a80
+> klibc-utils
+166a173
+> libklibc
+194a202
+> libnuma1:amd64
+268a277
+> libuuid-perl
+291a301,302
+> linux-base
+> linux-image-3.16.0-5-amd64
+======================================================================
+Package versions diff:
+======================================================================
+base-files8+deb8u8					      |	base-files8+deb8u10
+							      >	busybox1:1.22.0-9+deb8u1
+							      >	cpio2.11+dfsg-4.1+deb8u1
+curl7.38.0-4+deb8u5					      |	curl7.38.0-4+deb8u10
+debconf1.5.56						      |	debconf1.5.56+deb8u1
+debconf-i18n1.5.56					      |	debconf-i18n1.5.56+deb8u1
+exim44.84.2-2+deb8u4					      |	exim44.84.2-2+deb8u5
+exim4-base4.84.2-2+deb8u4				      |	exim4-base4.84.2-2+deb8u5
+exim4-config4.84.2-2+deb8u4				      |	exim4-config4.84.2-2+deb8u5
+exim4-daemon-light4.84.2-2+deb8u4			      |	exim4-daemon-light4.84.2-2+deb8u5
+							      >	firmware-linux-free3.3
+gcc-4.9-base:amd644.9.2-10				      |	gcc-4.9-base:amd644.9.2-10+deb8u1
+gnupg1.4.18-7+deb8u3					      |	gnupg1.4.18-7+deb8u4
+gpgv1.4.18-7+deb8u3					      |	gpgv1.4.18-7+deb8u4
+							      >	initramfs-tools0.120+deb8u3
+isc-dhcp-client4.3.1-6+deb8u2				      |	irqbalance1.0.6-3+deb8u1
+isc-dhcp-common4.3.1-6+deb8u2				      |	isc-dhcp-client4.3.1-6+deb8u3
+							      >	isc-dhcp-common4.3.1-6+deb8u3
+							      >	klibc-utils2.0.4-2
+krb5-locales1.12.1+dfsg-19+deb8u2			      |	krb5-locales1.12.1+dfsg-19+deb8u4
+libcups2:amd641.7.5-11+deb8u1				      |	libcups2:amd641.7.5-11+deb8u2
+libcurl3:amd647.38.0-4+deb8u5				      |	libcurl3:amd647.38.0-4+deb8u10
+libcurl3-gnutls:amd647.38.0-4+deb8u5			      |	libcurl3-gnutls:amd647.38.0-4+deb8u10
+libdb5.3:amd645.3.28-9					      |	libdb5.3:amd645.3.28-9+deb8u1
+libdns-export1001:9.9.5.dfsg-9+deb8u11			      |	libdns-export1001:9.9.5.dfsg-9+deb8u15
+libexpat1:amd642.1.0-6+deb8u3				      |	libexpat1:amd642.1.0-6+deb8u4
+libgcc1:amd641:4.9.2-10					      |	libgcc1:amd641:4.9.2-10+deb8u1
+libgcrypt20:amd641.6.3-2+deb8u3				      |	libgcrypt20:amd641.6.3-2+deb8u4
+libgdk-pixbuf2.0-0:amd642.31.1-2+deb8u5			      |	libgdk-pixbuf2.0-0:amd642.31.1-2+deb8u7
+libgdk-pixbuf2.0-common2.31.1-2+deb8u5			      |	libgdk-pixbuf2.0-common2.31.1-2+deb8u7
+libgfortran3:amd644.9.2-10				      |	libgfortran3:amd644.9.2-10+deb8u1
+libgnutls-deb0-28:amd643.3.8-6+deb8u6			      |	libgnutls-deb0-28:amd643.3.8-6+deb8u7
+libgnutls-openssl27:amd643.3.8-6+deb8u6			      |	libgnutls-openssl27:amd643.3.8-6+deb8u7
+libgssapi-krb5-2:amd641.12.1+dfsg-19+deb8u2		      |	libgssapi-krb5-2:amd641.12.1+dfsg-19+deb8u4
+libgtk2.0-0:amd642.24.25-3+deb8u1			      |	libgtk2.0-0:amd642.24.25-3+deb8u2
+libgtk2.0-bin2.24.25-3+deb8u1				      |	libgtk2.0-bin2.24.25-3+deb8u2
+libgtk2.0-common2.24.25-3+deb8u1			      |	libgtk2.0-common2.24.25-3+deb8u2
+libicu52:amd6452.1-8+deb8u5				      |	libicu52:amd6452.1-8+deb8u7
+libirs-export911:9.9.5.dfsg-9+deb8u11			      |	libirs-export911:9.9.5.dfsg-9+deb8u15
+libisccfg-export901:9.9.5.dfsg-9+deb8u11		      |	libisccfg-export901:9.9.5.dfsg-9+deb8u15
+libisc-export951:9.9.5.dfsg-9+deb8u11			      |	libisc-export951:9.9.5.dfsg-9+deb8u15
+libk5crypto3:amd641.12.1+dfsg-19+deb8u2			      |	libk5crypto3:amd641.12.1+dfsg-19+deb8u4
+							      >	libklibc2.0.4-2
+libkrb5-3:amd641.12.1+dfsg-19+deb8u2			      |	libkrb5-3:amd641.12.1+dfsg-19+deb8u4
+libkrb5support0:amd641.12.1+dfsg-19+deb8u2		      |	libkrb5support0:amd641.12.1+dfsg-19+deb8u4
+libncurses5:amd645.9+20140913-1+b1			      |	libncurses5:amd645.9+20140913-1+deb8u2
+libncursesw5:amd645.9+20140913-1+b1			      |	libncursesw5:amd645.9+20140913-1+deb8u2
+libnss3:amd642:3.26-1+debu8u2				      |	libnss3:amd642:3.26-1+debu8u3
+							      >	libnuma1:amd642.0.10-1
+libpam0g:amd641.1.8-3.1+deb8u2				      |	libpam0g:amd641.1.8-3.1+deb8u2+b1
+libpam-modules:amd641.1.8-3.1+deb8u2			      |	libpam-modules:amd641.1.8-3.1+deb8u2+b1
+libpam-modules-bin1.1.8-3.1+deb8u2			      |	libpam-modules-bin1.1.8-3.1+deb8u2+b1
+libquadmath0:amd644.9.2-10				      |	libquadmath0:amd644.9.2-10+deb8u1
+libssl1.0.0:amd641.0.1t-1+deb8u6			      |	libssl1.0.0:amd641.0.1t-1+deb8u8
+libstdc++6:amd644.9.2-10				      |	libstdc++6:amd644.9.2-10+deb8u1
+libtiff5:amd644.0.3-12.3+deb8u3				      |	libtiff5:amd644.0.3-12.3+deb8u5
+libtinfo5:amd645.9+20140913-1+b1			      |	libtinfo5:amd645.9+20140913-1+deb8u2
+							      >	libuuid-perl0.05-1+b1
+libx11-6:amd642:1.6.2-3					      |	libx11-6:amd642:1.6.2-3+deb8u1
+libx11-data2:1.6.2-3					      |	libx11-data2:1.6.2-3+deb8u1
+libxcursor1:amd641:1.1.14-1+b1				      |	libxcursor1:amd641:1.1.14-1+deb8u1
+libxfixes3:amd641:5.0.1-2+b2				      |	libxfixes3:amd641:5.0.1-2+deb8u1
+libxi6:amd642:1.7.4-1+b2				      |	libxi6:amd642:1.7.4-1+deb8u1
+libxml2:amd642.9.1+dfsg1-5+deb8u4			      |	libxml2:amd642.9.1+dfsg1-5+deb8u6
+libxrandr2:amd642:1.4.2-1+b1				      |	libxrandr2:amd642:1.4.2-1+deb8u1
+							      >	linux-base3.5
+							      >	linux-image-3.16.0-5-amd643.16.51-3+deb8u1
+ncurses-base5.9+20140913-1				      |	ncurses-base5.9+20140913-1+deb8u2
+ncurses-bin5.9+20140913-1+b1				      |	ncurses-bin5.9+20140913-1+deb8u2
+ncurses-term5.9+20140913-1				      |	ncurses-term5.9+20140913-1+deb8u2
+openssh-client1:6.7p1-5+deb8u3				      |	openssh-client1:6.7p1-5+deb8u4
+openssh-server1:6.7p1-5+deb8u3				      |	openssh-server1:6.7p1-5+deb8u4
+openssh-sftp-server1:6.7p1-5+deb8u3			      |	openssh-sftp-server1:6.7p1-5+deb8u4
+openssl1.0.1t-1+deb8u6					      |	openssl1.0.1t-1+deb8u8
+perl5.20.2-3+deb8u7					      |	perl5.20.2-3+deb8u9
+perl-base5.20.2-3+deb8u7				      |	perl-base5.20.2-3+deb8u9
+perl-modules5.20.2-3+deb8u7				      |	perl-modules5.20.2-3+deb8u9
+rsync3.1.1-3						      |	rsync3.1.1-3+deb8u1
+sensible-utils0.0.9					      |	sensible-utils0.0.9+deb8u1
+ssh1:6.7p1-5+deb8u3					      |	ssh1:6.7p1-5+deb8u4
+sudo1.8.10p3-1+deb8u4					      |	sudo1.8.10p3-1+deb8u5
+tcpdump4.9.0-1~deb8u1					      |	tcpdump4.9.2-1~deb8u1
+tzdata2017b-0+deb8u1					      |	tzdata2018d-0+deb8u1
+wget1.16-1+deb8u2					      |	wget1.16-1+deb8u4
+======================================================================
+Kernel version info:
+======================================================================
+OLD KERNEL: 
+
+NEW KERNEL: linux-image-3.16.0-5-amd643.16.51-3+deb8u1
