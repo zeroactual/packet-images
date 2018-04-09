@@ -65,7 +65,7 @@ os=${distro%%_*}
 # use image get script for distros we support
 case ${os} in
 	centos* | ubuntu*) ./tools/"get-$os-image" "$version" "$arch" "work/$distro-base/$arch" ;;
-	scientific* | debian* | freebsd* | rhel*) echo "Skipping raw image fetch for $os" ;;
+	scientific* | debian* | freebsd* | rhel* | opensuse*) echo "Skipping raw image fetch for $os" ;;
 esac
 
 echo "Build $distro-base with docker..."
