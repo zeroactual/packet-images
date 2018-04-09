@@ -62,7 +62,11 @@ git reset HEAD
 # shellcheck disable=SC2001
 version=$(echo "${distro#*_}" | sed 's|_|.|g')
 os=${distro%%_*}
-./tools/"get-$os-image" "$version" "$arch" "work/$distro-base/$arch"
+# use image get script for distros we support
+case ${OS} in
+	centos* | ubuntu*) ./tools/"get-$os-image" "$version" "$arch" "work/$distro-base/$arch" ;;
+	scientific* | debian* | freebsd* | rhel*) echo "Skipping raw image fetch for $OS" ;;
+esac
 
 echo "Build $distro-base with docker..."
 docker build -t "$distro-base" "work/$distro-base/$arch"
