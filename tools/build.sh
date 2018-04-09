@@ -63,9 +63,9 @@ git reset HEAD
 version=$(echo "${distro#*_}" | sed 's|_|.|g')
 os=${distro%%_*}
 # use image get script for distros we support
-case ${OS} in
+case ${os} in
 	centos* | ubuntu*) ./tools/"get-$os-image" "$version" "$arch" "work/$distro-base/$arch" ;;
-	scientific* | debian* | freebsd* | rhel*) echo "Skipping raw image fetch for $OS" ;;
+	scientific* | debian* | freebsd* | rhel*) echo "Skipping raw image fetch for $os" ;;
 esac
 
 echo "Build $distro-base with docker..."
