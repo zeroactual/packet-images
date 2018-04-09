@@ -74,6 +74,12 @@ RUN apt-get -q update && \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
+# Install a specific kernel
+RUN apt-get -q update && \
+		apt-get install -y -qq \
+		linux-image-3.16.0-5-amd64 \
+		&& apt-get -y remove --purge linux-image-3.16.0-5-amd64-dbg
+
 # Assign default target
 RUN systemctl set-default multi-user
 
