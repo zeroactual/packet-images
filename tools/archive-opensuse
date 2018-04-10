@@ -11,7 +11,7 @@ mkdir -p $IMAGETMP
 tar -zxf $IMAGE -C $IMAGETMP
 
 KERNEL=$(ls -al $IMAGETMP/boot/vmlinuz-* | awk {'print $9'} | sort -V | grep -v rescue | head -1)
-INITRD=$(ls -al $IMAGETMP/boot/initramfs* | awk {'print $9'} | sort -V | grep -v rescue | head -1)
+INITRD=$(ls -al $IMAGETMP/boot/initrd-* | awk {'print $9'} | sort -V | grep -v rescue | head -1)
 KERNELVER=$(echo $KERNEL | sed "s/$IMAGETMP\/boot\/vmlinuz-//g")
 
 echo "Kernel file: $KERNEL"
@@ -33,7 +33,7 @@ tar -czf $OUTDIR/kernel.tar.gz -C $tmp/boot ./vmlinuz --totals --checkpoint=.100
 
 echo "Archiving initrd..."
 cp $INITRD $tmp/boot
-mv $tmp/boot/initramfs-$KERNELVER.img $tmp/boot/initrd
+mv $tmp/boot/initrd-$KERNELVER $tmp/boot/initrd
 tar -czf $OUTDIR/initrd.tar.gz -C $tmp/boot ./initrd --totals --checkpoint=.1000
 
 echo "Archiving modules..."
