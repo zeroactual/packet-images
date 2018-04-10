@@ -98,9 +98,15 @@ if [[ -n ${branch:-} ]]; then
 	ls -al
 	git lfs track *.tar.gz
 	OLDIMAGE=$(git ls-remote | grep "refs/heads/$distro-$plan" | awk {'print $1'})
-	echo "Generating CHANGELOG based on previous image $OLDIMAGE"
-	touch CHANGELOG
-	./tools/compare-$os $OLDIMAGE >> CHANGELOG
+	if [[ -z $OLDIMAGE ]] ; then
+        	echo "No OLDIMAGE set! Skipping image compare"
+	else
+        	echo "OLDIMAGE set"
+		echo "Generating CHANGELOG based on previous image $OLDIMAGE"
+		touch CHANGELOG
+		./tools/compare-$os $OLDIMAGE >> CHANGELOG
+	fi
+
 	git add *.tar.gz Dockerfile .gitattributes CHANGELOG
 
 	#echo "commiting and tagging"
