@@ -15,6 +15,11 @@ git -C $dirold remote add origin https://github.com/packethost/packet-images.git
 git -C $dirold fetch origin &>/dev/null
 git -C $dirold checkout "$IMAGEOLD" &>/dev/null
 
+if [ ! -f $dirold/image.tar.gz ]; then
+        #image  does not exist yet
+        exit 0
+fi
+
 echo "======================================================================"
 echo "Ovierview:"
 echo "======================================================================"
