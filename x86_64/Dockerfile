@@ -16,6 +16,7 @@ RUN zypper --non-interactive install -y \
 	iotop \
 	iperf \
 	keyutils \
+	lsb-release \
 	logrotate \
 	make \
 	mdadm \
