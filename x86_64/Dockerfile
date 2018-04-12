@@ -50,7 +50,7 @@ RUN zypper --non-interactive install -y \
 	zypper clean --all
 
 # Install a specific kernel and deps
-RUN zypper install -y kernel-default-4.4.120-45.1.x86_64
+RUN zypper install -y kernel-default-4.4.120-45.1.x86_64 kernel-firmware
 
 # Adjust generic initrd
 RUN dracut --filesystems="ext4 vfat" --mdadmconf --force initrd-4.4.120-45-default 4.4.120-45-default
