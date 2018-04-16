@@ -62,11 +62,13 @@ The branch should contain install assets (image, kernel, initrd, modules) and Do
 Build tools are intentionally kept separate from operating system branches.
 To create a new image you may create an orphan branch (to exclude any pre-existing contents) of the packet-images repo.
 
+    # TODO: Retrieve or create ubuntu_17_10-base image
     [packet-images]$ git checkout --orphan ubuntu_17_10-supermachine1
     [packet-images]$ git rm --cached -r .
     [packet-images]$ vi Dockerfile
+    # Fill in Dockerfile with content
     [packet-images]$ echo "RUN apt-get -y install mlx" >> Dockerfile
-    [packet-images]$ docker build -t ubuntu_17_10-supermachine1 . && docker save ubuntu_17_10-supermachine1 > ubuntu_17_10-supermachine1.tar && save2-image < ubuntu_17_10-supermachine1 > image.tar.gz
+    [packet-images]$ docker build -t ubuntu_17_10-supermachine1 . && docker save ubuntu_17_10-supermachine1 > ubuntu_17_10-supermachine1.tar && packet-save2image < ubuntu_17_10-supermachine1.tar > image.tar.gz
     [packet-images]$ git lfs track *.tar.gz
     [packet-images]$ git add Dockerfile .gitattributes image.tar.gz
     [packet-images]$ git commit -m "Add Mellanox package for supermachine1"
@@ -76,7 +78,7 @@ To create a new image you may create an orphan branch (to exclude any pre-existi
 
 Using build script method:
 
-    [packet-images]$ ./tools/build.sh -d debian_9 -t baremetal_0 -a x86_64 -b debian_9-baremetal_0-dev
+    [packet-images]$ ./tools/build.sh -d debian_9 -p baremetal_0 -a x86_64 -b debian_9-baremetal_0-dev
     Checking out debian_9-baremetal_0-dev...
     Switched to and reset branch 'debian_9-baremetal_0-dev'
     Create read-tree for debian_9-base...
