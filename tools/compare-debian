@@ -16,7 +16,7 @@ git -C $dirold fetch origin &>/dev/null
 git -C $dirold checkout "$IMAGEOLD" &>/dev/null
 
 if [ ! -f $dirold/image.tar.gz ]; then
-        #image  does not exist yet
+	echo "WARNING: Image does not exist yet. Maybe this is the first image?" >&2
         exit 0
 fi
 
