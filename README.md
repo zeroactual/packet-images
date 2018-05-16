@@ -89,7 +89,7 @@ Using build script method:
 
 Generate CHANGELOG automatically:
 
-    [root@packet-packer-centos packet-images]# ./tools/compare-debian     <previous/old commit sha>
+    [packet-images]$ ./tools/compare-debian     <previous/old commit sha>
     ======================================================================
     Ovierview:
     ======================================================================
