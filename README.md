@@ -117,6 +117,27 @@ Generate CHANGELOG automatically:
     ...snip...
     ======================================================================
 
+### Kernel/Initrd/Modules
+Currently, the kernel and related files are separately packaged for later extraction (at installation time) onto the target server filesystem. The creation of generic initrd will be a attempted from within the Dockerfile using mkinitramfs, dracut or similar. You may also add your own outside kernel by supplying kernel.tar.gz, initrd.tar.gz and modules.tar. The default generic (created inside Docker) can be packaged automatically using the tools/archive-$OS helper script.
+
+Archiving the kernel:
+
+    [packet-images]$ ./tools/archive-debian ./image.tar.gz ./
+    Kernel file: image-temp/boot/vmlinuz-4.9.0-5-amd64
+    Initrd file: image-temp/boot/initrd.img-4.9.0-5-amd64
+    Kernel version: 4.9.0-5-amd64
+    Temp directory is: /tmp/initrd4me-AI0m6tH
+    Archive dir is: ./
+    Archiving kernel...
+    Total bytes written: 4218880 (4.1MiB, 40MiB/s)
+    Archiving initrd...
+    Total bytes written: 18432000 (18MiB, 36MiB/s)
+    Archiving modules...
+    ..................Total bytes written: 186152960 (178MiB, 28MiB/s)
+    [packet-images]$ ls -al *.tar.gz | grep -v image
+    -rw-r--r-- 1 root root  18316647 May 15 22:24 initrd.tar.gz
+    -rw-r--r-- 1 root root   4036476 May 15 22:24 kernel.tar.gz
+    -rw-r--r-- 1 root root  50173835 May 15 22:24 modules.tar.gz
 
 ### Deploying your custom image on Packet
 You have a working image built, so now what?
