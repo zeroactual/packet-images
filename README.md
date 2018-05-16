@@ -87,6 +87,35 @@ Using build script method:
     Build debian_9-t1.small.x86 with docker...
     Save image
 
+Generate CHANGELOG automatically:
+
+    [root@packet-packer-centos packet-images]# ./tools/compare-debian     <previous/old commit sha>
+    ======================================================================
+    Ovierview:
+    ======================================================================
+    Image Size
+        Current: 320M
+        Previous:: 317M
+    Filesystem Size
+        Current: 897M
+        Previous: 893M
+    Packages
+        Current: 449
+    Previous: 448
+    Kernel(s)
+        Current:
+          linux-image-4.9.0-5-amd644.9.65-3+deb9u3
+        Previous:
+          linux-image-4.9.0-5-amd644.9.65-3+deb9u2
+    ======================================================================
+    New Packages:
+    ======================================================================
+    wget1.18-5+deb9u2
+    ======================================================================
+    Updated Packages:
+    libpam-systemd:amd64232-25+deb9u2			      |	libpam-systemd:amd64232-25+deb9u3
+    ...snip...
+    ======================================================================
 
 
 ### Deploying your custom image on Packet
