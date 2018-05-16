@@ -40,8 +40,8 @@ echo "   Current: $(du -sh $dirnew/imagefs | awk {'print $1'})"
 echo "   Previous: $(du -sh $dirold/imagefs | awk {'print $1'})"
 
 echo "Packages"
-echo "   Current: $(chroot $dirnew/imagefs /bin/bash -c "rpm -qa | wc -l")"
-echo "   Previous: $(chroot $dirold/imagefs /bin/bash -c "rpm -qa | wc -l")"
+echo "   Current: $(chroot $dirnew/imagefs /bin/bash -c "dpkg -l | wc -l")"
+echo "   Previous: $(chroot $dirold/imagefs /bin/bash -c "dpkg -l | wc -l")"
 
 echo "Kernel(s)"
 KERNELS=$(grep linux-image $dirnew/imagefs/tmp/pkglist-versions.out | grep -v tools | grep -v libs)
