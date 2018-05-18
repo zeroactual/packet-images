@@ -118,7 +118,10 @@ Generate CHANGELOG automatically:
     ======================================================================
 
 ### Kernel/Initrd/Modules
-Currently, the kernel and related files are separately packaged for later extraction (at installation time) onto the target server filesystem. The creation of generic initrd will be a attempted from within the Dockerfile using mkinitramfs, dracut or similar. You may also add your own outside kernel by supplying kernel.tar.gz, initrd.tar.gz and modules.tar. The default generic (created inside Docker) can be packaged automatically using the tools/archive-$OS helper script.
+Currently, the kernel and related files are separately packaged for later extraction (at installation time) onto the target server filesystem.
+The creation of generic initrd will be attempted from within the Dockerfile using mkinitramfs, dracut or similar.
+You may also add your own outside kernel by supplying kernel.tar.gz, initrd.tar.gz and modules.tar.gz.
+The default generic (created inside Docker) can be packaged automatically using the tools/archive-$OS helper script.
 
 Archiving the kernel:
 
