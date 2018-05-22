@@ -88,6 +88,9 @@ RUN apt-get -q update && \
 RUN locale-gen en_US.UTF-8 && \
     dpkg-reconfigure locales
 
+# Unminimize system
+RUN yes | unminimize && apt-get clean
+
 # Fix permissions
 RUN chown root:syslog /var/log \
 	&& chmod 755 /etc/default
