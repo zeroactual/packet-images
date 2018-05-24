@@ -21,7 +21,7 @@ if [ ! -f $dirold/image.tar.gz ]; then
 fi
 
 echo "======================================================================"
-echo "Ovierview:"
+echo "Overview:"
 echo "======================================================================"
 echo "Image Size"
 echo "   Current: $(du -sh ./image.tar.gz | awk {'print $1'})"
