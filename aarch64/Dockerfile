@@ -76,13 +76,6 @@ RUN apt-get -q update && \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/log/*
 
-# Install a specific kernel
-RUN apt-get -q update && \
-	apt-get -y -qq upgrade && \
-	apt-get install -y -qq \
-	linux-image-4.15.0-20-generic \
-	linux-modules-extra-4.15.0-20-generic
-
 # Configure locales
 RUN locale-gen en_US.UTF-8 && \
     dpkg-reconfigure locales
