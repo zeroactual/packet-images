@@ -49,8 +49,8 @@ RUN zypper --non-interactive install -y \
 	vim && \
 	zypper clean --all
 
-# Enable sshd
-RUN systemctl enable sshd
+# Enable sshd and cloud-init services
+RUN systemctl enable sshd cloud-config cloud-final cloud-init-local cloud-init
 
 # Install a specific kernel and deps
 RUN zypper install -y kernel-default-4.4.120-45.1.x86_64 kernel-firmware
