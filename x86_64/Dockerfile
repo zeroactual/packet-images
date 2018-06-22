@@ -2,6 +2,10 @@ FROM opensuse:42.3
 MAINTAINER David Laube <dlaube@packet.net>
 LABEL Description="Packet's OpenSUSE OS base image" Vendor="Packet.net" Version="1.0"
 
+# Upgrade distribution
+RUN zypper --non-interactive dist-upgrade -y
+
+# Install packages
 RUN zypper --non-interactive install -y \
 	audit \
 	bash \
