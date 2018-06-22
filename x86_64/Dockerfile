@@ -15,6 +15,7 @@ RUN zypper --non-interactive install -y \
 	cloud-init \
 	cron \
 	curl \
+	glibc-locale \
 	hwdata \
 	ioping \
 	iotop \
