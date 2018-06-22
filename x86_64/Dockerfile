@@ -50,14 +50,16 @@ RUN zypper --non-interactive install -y \
 	tuned \
 	vim \
 	wget \
-	vim && \
-	zypper clean --all
+	vim
 
 # Enable sshd and cloud-init services
 RUN systemctl enable sshd cloud-config cloud-final cloud-init-local cloud-init
 
 # Install a specific kernel and deps
 RUN zypper install -y kernel-default-4.4.120-45.1.x86_64 kernel-firmware
+
+# Clean package cache
+RUN zypper clean --all
 
 # Adjust generic initrd
 RUN dracut --filesystems="ext4 vfat" --mdadmconf --force initrd-4.4.120-45-default 4.4.120-45-default
