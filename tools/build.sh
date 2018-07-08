@@ -79,7 +79,7 @@ docker build -t "$distro-$plan" "work/$distro-$plan"
 
 echo "Save docker image"
 # shellcheck disable=SC2024
-docker save "$distro-$plan" | fakeroot tools/packet-save2image >"$distro-$plan-image.tar.gz.tmp"
+docker save "$distro-$plan" | fakeroot packet-save2image >"$distro-$plan-image.tar.gz.tmp"
 mv "$distro-$plan-image.tar.gz.tmp" "$distro-$plan-image.tar.gz"
 
 if [[ -n ${branch:-} ]]; then
